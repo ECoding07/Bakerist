@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAKERIST — Mabini Bakery | Fresh Filipino Baked Goods</title>
+    <meta name="description" content="Freshly baked Filipino breads, cakes, and pastries from Mabini, Batangas. Order online for delivery or pickup.">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
+</head>
+<body data-page="home">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <!-- Logo -->
+                <a href="index.html" class="logo">
+                    <div class="logo-image">
+                        <img src="assets/images/bakerist-logo.png" alt="BAKERIST Mabini Bakery" style="height: 50px;">
+                    </div>
+                    <div class="logo-text">BAKERIST</div>
+                </a>
+
+                <!-- Navigation Menu -->
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link active">Home</a></li>
+                    <li><a href="menu.html" class="nav-link">Menu</a></li>
+                    <li><a href="tracking.html" class="nav-link">Track Order</a></li>
+                    <li class="logged-out"><a href="login.html" class="nav-link">Login</a></li>
+                    <li class="logged-in hidden"><a href="profile.html" class="nav-link">My Account</a></li>
+                    <li class="admin-only hidden"><a href="admin.html" class="nav-link">Admin</a></li>
+                </ul>
+
+                <!-- Navigation Actions -->
+                <div class="nav-actions">
+                    <a href="cart.html" class="btn btn-outline btn-sm">
+                        🛒 Cart <span id="cart-count">0</span>
+                    </a>
+                    
+                    <!-- User Menu (logged in) -->
+                    <div class="logged-in hidden">
+                        <span class="user-name">User</span>
+                        <button class="btn btn-sm btn-secondary" onclick="logout()">Logout</button>
+                    </div>
+                    
+                    <!-- Mobile Menu Toggle -->
+                    <div class="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Background Video -->
+        <div class="hero-video-container">
+            <video autoplay muted loop playsinline class="hero-video">
+                <source src="assets/videos/hero-video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-video-overlay"></div>
+        </div>
+        
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Fresh Baked Goodness from Mabini</h1>
+                <p class="hero-description">
+                    Experience the warmth of traditional Filipino baking with our freshly made breads, 
+                    cakes, and pastries. Baked daily with love and the finest ingredients.
+                </p>
+                <div class="hero-actions">
+                    <a href="menu.html" class="btn btn-primary btn-lg">Order Now</a>
+                    <a href="#featured" class="btn btn-secondary btn-lg">View Menu</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating Pastry Decorations -->
+        <div class="floating-pastries">
+            <div class="pastry pastry-1">🥐</div>
+            <div class="pastry pastry-2">🍞</div>
+            <div class="pastry pastry-3">🥖</div>
+            <div class="pastry pastry-4">🥨</div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section id="featured" class="section section-light">
+        <div class="container">
+            <div class="text-center">
+                <h2>Our Fresh Bakes</h2>
+                <p class="mb-5">Handcrafted daily with traditional recipes and modern love</p>
+            </div>
+            
+            <div id="featured-products" class="products-grid">
+                <!-- Featured products will be loaded by JavaScript -->
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading our fresh bakes...</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="menu.html" class="btn btn-primary btn-lg">View Full Menu</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section section-beige">
+        <div class="container">
+            <div class="text-center">
+                <h2>Our Bakery Story</h2>
+            </div>
+            
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="text-center">
+                    <h3>Mission</h3>
+                    <p>
+                        To bring the authentic taste of Filipino baked goods to every home in Mabini and beyond, 
+                        using traditional recipes passed down through generations while embracing modern baking techniques.
+                    </p>
+                    
+                    <h3>Vision</h3>
+                    <p>
+                        To be Mabini's most beloved bakery, known for quality, freshness, and community spirit. 
+                        We envision a future where every family starts their day with our warm, freshly baked goods.
+                    </p>
+                    
+                    <h3>Why Choose Bakerist?</h3>
+                    <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-xl); margin-top: var(--space-2xl);">
+                        <div class="feature">
+                            <div style="font-size: 2.5rem; margin-bottom: var(--space-sm);">🍞</div>
+                            <h4>Fresh Daily</h4>
+                            <p>Baked fresh every morning, never day-old</p>
+                        </div>
+                        <div class="feature">
+                            <div style="font-size: 2.5rem; margin-bottom: var(--space-sm);">❤️</div>
+                            <h4>Made with Love</h4>
+                            <p>Traditional recipes with heart and soul</p>
+                        </div>
+                        <div class="feature">
+                            <div style="font-size: 2.5rem; margin-bottom: var(--space-sm);">🚚</div>
+                            <h4>Free Delivery</h4>
+                            <p>Within Mabini for orders over ₱300</p>
+                        </div>
+                        <div class="feature">
+                            <div style="font-size: 2.5rem; margin-bottom: var(--space-sm);">🏆</div>
+                            <h4>Quality Guaranteed</h4>
+                            <p>Only the finest ingredients used</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="text-center">
+                <h2>What Our Customers Say</h2>
+            </div>
+            
+            <div class="testimonials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-xl); margin-top: var(--space-2xl);">
+                <div class="testimonial-card" style="background: var(--white); padding: var(--space-xl); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+                    <div class="testimonial-text" style="font-style: italic; margin-bottom: var(--space-lg);">
+                        "The best pandesal in Mabini! Fresh every morning and always delivered with a smile. 
+                        My family starts every day with Bakerist breads."
+                    </div>
+                    <div class="testimonial-author">
+                        <strong>Maria Santos</strong>
+                        <div style="color: var(--gray-medium); font-size: 0.9rem;">Regular Customer</div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card" style="background: var(--white); padding: var(--space-xl); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+                    <div class="testimonial-text" style="font-style: italic; margin-bottom: var(--space-lg);">
+                        "Ordered an Ube Cake for my daughter's birthday and it was absolutely delicious! 
+                        The cake was moist, not too sweet, and the delivery was right on time."
+                    </div>
+                    <div class="testimonial-author">
+                        <strong>Juan dela Cruz</strong>
+                        <div style="color: var(--gray-medium); font-size: 0.9rem;">Anilao Resident</div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card" style="background: var(--white); padding: var(--space-xl); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+                    <div class="testimonial-text" style="font-style: italic; margin-bottom: var(--space-lg);">
+                        "Their ensaymada is to die for! So soft and buttery. I always order extra for my 
+                        coworkers and they can't get enough. Bakerist never disappoints!"
+                    </div>
+                    <div class="testimonial-author">
+                        <strong>Ana Reyes</strong>
+                        <div style="color: var(--gray-medium); font-size: 0.9rem;">Local Teacher</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- Store Info -->
+                <div class="footer-section">
+                    <h3>BAKERIST</h3>
+                    <p>Mabini's favorite bakery since 2024. Fresh baked goods made with traditional recipes and modern love.</p>
+                    <div class="contact-info" style="margin-top: var(--space-lg);">
+                        <div>📍 Mabini, Batangas, Philippines</div>
+                        <div>📞 +63 912 345 6789</div>
+                        <div>🕒 6:00 AM - 8:00 PM Daily</div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="menu.html">Menu</a></li>
+                        <li><a href="tracking.html">Track Order</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Categories -->
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="menu.html?category=Breads">Breads</a></li>
+                        <li><a href="menu.html?category=Cakes">Cakes</a></li>
+                        <li><a href="menu.html?category=Cupcakes">Cupcakes</a></li>
+                        <li><a href="menu.html?category=Other+Favorites">Other Favorites</a></li>
+                        <li><a href="menu.html?category=Specials">Special Offers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social & Newsletter -->
+                <div class="footer-section">
+                    <h3>Stay Connected</h3>
+                    <p>Follow us for fresh updates and special offers!</p>
+                    <div class="social-links" style="display: flex; gap: var(--space-sm); margin: var(--space-lg) 0;">
+                        <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; transition: background var(--transition-fast);">📘</a>
+                        <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; transition: background var(--transition-fast);">📷</a>
+                        <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; transition: background var(--transition-fast);">🐦</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <p>&copy; 2024 BAKERIST — Mabini Bakery. All rights reserved. | Made with ❤️ in Mabini, Batangas</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/init.js"></script>
+    <script src="js/auth.js"></script>
+    
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (hamburger) {
+                hamburger.addEventListener('click', function() {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+            }
+            
+            // Close mobile menu when clicking on a link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
+            });
+            
+            // Update cart count
+            function updateCartCount() {
+                const cart = JSON.parse(localStorage.getItem('bakerist_cart') || '[]');
+                const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+                const cartElement = document.getElementById('cart-count');
+                if (cartElement) {
+                    cartElement.textContent = cartCount;
+                }
+            }
+            
+            updateCartCount();
+            
+            // Add floating pastry animations
+            function createFloatingPastries() {
+                const pastries = document.querySelectorAll('.pastry');
+                pastries.forEach((pastry, index) => {
+                    pastry.style.animation = `float ${3 + index * 0.5}s ease-in-out infinite alternate`;
+                });
+            }
+            
+            createFloatingPastries();
+        });
+        
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('bakerist_session');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

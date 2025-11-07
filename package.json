@@ -1,0 +1,17 @@
+{
+  "name": "bakerist-bakery",
+  "version": "1.0.0",
+  "description": "Static website for BAKERIST Mabini Bakery",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve public",
+    "start": "npx serve public -p 3000",
+    "build": "echo 'No build process needed for static site'"
+  },
+  "keywords": ["bakery", "food", "ordering", "static"],
+  "author": "Bakerist Team",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+}
