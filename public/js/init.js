@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeApp() {
     console.log('🚀 Initializing BAKERIST Bakery App...');
     
+    // Migrate any existing plain-text passwords (if present)
+    ensureUserPasswordsHashed();
+
     // Check if we need to seed data
     if (!localStorage.getItem('bakerist_initialized')) {
         seedInitialData();
@@ -35,8 +38,15 @@ function seedInitialData() {
         // Fetch seed data (in real implementation, this would be from seed.json)
         const seedData = getSeedData();
         
+        // Ensure seeded passwords are hashed using simpleHash (seed uses plain-text values)
+        const seededUsers = (seedData.users || []).map(u => ({
+            ...u,
+            // If the seed provides a plain string in passwordHash, hash it for consistency
+            passwordHash: typeof u.passwordHash === 'string' ? simpleHash(u.passwordHash) : (u.passwordHash || '')
+        }));
+
         // Store each data type in localStorage
-        localStorage.setItem('bakerist_users', JSON.stringify(seedData.users));
+        localStorage.setItem('bakerist_users', JSON.stringify(seededUsers));
         localStorage.setItem('bakerist_products', JSON.stringify(seedData.products));
         localStorage.setItem('bakerist_orders', JSON.stringify(seedData.orders));
         localStorage.setItem('bakerist_delivery_zones', JSON.stringify(seedData.delivery_zones));
@@ -51,6 +61,32 @@ function seedInitialData() {
     } catch (error) {
         console.error('❌ Error seeding initial data:', error);
         showToast('Error initializing app data', 'error');
+    }
+}
+
+/**
+ * Ensure any existing users stored in localStorage have hashed passwords.
+ * This migrates older seed data that stored plain-text passwords.
+ */
+function ensureUserPasswordsHashed() {
+    try {
+        const users = JSON.parse(localStorage.getItem('bakerist_users') || '[]');
+        let changed = false;
+        const migrated = users.map(u => {
+            if (u && u.passwordHash && /[^0-9-]/.test(u.passwordHash)) {
+                // passwordHash contains non-digit characters -> assume plain text, hash it
+                u.passwordHash = simpleHash(u.passwordHash);
+                changed = true;
+            }
+            return u;
+        });
+
+        if (changed) {
+            localStorage.setItem('bakerist_users', JSON.stringify(migrated));
+            console.log('🔒 Migrated plain-text user passwords to hashed values');
+        }
+    } catch (e) {
+        console.warn('Could not migrate user passwords:', e);
     }
 }
 

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - BAKERIST Mabini Bakery</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="profile">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <div class="logo-image">
+                        <img src="assets/images/bakerist-logo.png" alt="BAKERIST Mabini Bakery" style="height: 50px;">
+                    </div>
+                    <div class="logo-text">BAKERIST</div>
+                </a>
+
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="menu.html" class="nav-link">Menu</a></li>
+                    <li><a href="tracking.html" class="nav-link">Track Order</a></li>
+                    <li class="logged-in"><a href="profile.html" class="nav-link active">My Profile</a></li>
+                    <li class="admin-only hidden"><a href="admin.html" class="nav-link">Admin</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="cart.html" class="btn btn-outline btn-sm">
+                        🛒 Cart <span id="cart-count">0</span>
+                    </a>
+                    <div class="logged-in">
+                        <span class="user-name">User</span>
+                        <button class="btn btn-sm btn-secondary" onclick="logout()">Logout</button>
+                    </div>
+                    <div class="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Profile Section -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="profile-header text-center mb-5">
+                <h1>My Account</h1>
+                <p class="text-muted">Manage your profile and preferences</p>
+            </div>
+
+            <div class="profile-layout" style="display: grid; grid-template-columns: 300px 1fr; gap: var(--space-2xl);">
+                <!-- Sidebar -->
+                <div class="profile-sidebar">
+                    <div class="sidebar-nav">
+                        <button class="sidebar-tab active" data-tab="profile">Profile Information</button>
+                        <button class="sidebar-tab" data-tab="orders">Order History</button>
+                        <button class="sidebar-tab" data-tab="password">Change Password</button>
+                        <button class="sidebar-tab" data-tab="preferences">Preferences</button>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="profile-content">
+                    <!-- Profile Information Tab -->
+                    <div id="profile-tab" class="tab-content active">
+                        <div class="tab-header">
+                            <h2>Profile Information</h2>
+                            <p>Update your personal details and contact information</p>
+                        </div>
+                        
+                        <form id="profile-form" class="profile-form">
+                            <div class="form-group">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" id="name" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" id="email" class="form-control" readonly style="background: var(--gray-light);">
+                                <div class="form-text">Email cannot be changed</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contact_no" class="form-label">Phone Number</label>
+                                <input type="tel" id="contact_no" class="form-control" required>
+                            </div>
+
+                            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+                                <div class="form-group">
+                                    <label for="barangay" class="form-label">Barangay</label>
+                                    <select id="barangay" class="form-control form-select" required>
+                                        <option value="">Select Barangay</option>
+                                        <option value="Anilao">Anilao</option>
+                                        <option value="Bagalangit">Bagalangit</option>
+                                        <option value="Mainit">Mainit</option>
+                                        <option value="Balon-Anito">Balon-Anito</option>
+                                        <option value="Matabungkay">Matabungkay</option>
+                                        <option value="Nag-Iba">Nag-Iba</option>
+                                        <option value="Laurel">Laurel</option>
+                                        <option value="Sampaguita">Sampaguita</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sitio" class="form-label">Sitio/Landmark</label>
+                                    <input type="text" id="sitio" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+
+                    <!-- Order History Tab -->
+                    <div id="orders-tab" class="tab-content">
+                        <div class="tab-header">
+                            <h2>Order History</h2>
+                            <p>View your recent orders and their status</p>
+                        </div>
+                        
+                        <div id="order-history" class="order-history">
+                            <!-- Orders will be loaded here -->
+                            <div class="loading-spinner">
+                                <div class="spinner"></div>
+                                <p>Loading your orders...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Change Password Tab -->
+                    <div id="password-tab" class="tab-content">
+                        <div class="tab-header">
+                            <h2>Change Password</h2>
+                            <p>Update your account password</p>
+                        </div>
+                        
+                        <form id="password-form" class="profile-form">
+                            <div class="form-group">
+                                <label for="current-password" class="form-label">Current Password</label>
+                                <input type="password" id="current-password" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="new-password" class="form-label">New Password</label>
+                                <input type="password" id="new-password" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirm-new-password" class="form-label">Confirm New Password</label>
+                                <input type="password" id="confirm-new-password" class="form-control" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Update Password</button>
+                        </form>
+                    </div>
+
+                    <!-- Preferences Tab -->
+                    <div id="preferences-tab" class="tab-content">
+                        <div class="tab-header">
+                            <h2>Preferences</h2>
+                            <p>Manage your notification and communication preferences</p>
+                        </div>
+                        
+                        <form id="preferences-form" class="profile-form">
+                            <div class="preference-group">
+                                <h3>Communication</h3>
+                                <div class="form-group">
+                                    <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: var(--space-sm);">
+                                        <input type="checkbox" id="newsletter">
+                                        <span>
+                                            <strong>Email Newsletter</strong><br>
+                                            Receive updates about new products, special offers, and bakery news
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: var(--space-sm);">
+                                        <input type="checkbox" id="sms_notifications" checked>
+                                        <span>
+                                            <strong>SMS Notifications</strong><br>
+                                            Get order updates and delivery notifications via SMS
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Save Preferences</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- About & Contact -->
+                <div class="footer-section footer-about">
+                    <div class="footer-logo">
+                        <img src="assets/images/bakerist-logo.png" alt="BAKERIST">
+                        <div class="footer-logo-text">BAKERIST</div>
+                    </div>
+                    <p class="footer-about-text">
+                        Mabini's favorite bakery since 2024. Fresh baked goods made with traditional recipes 
+                        and modern love. We bring the warmth of Filipino baking to your doorstep.
+                    </p>
+                    <div class="footer-contact">
+                        <div class="contact-item">
+                            <span class="contact-icon">📍</span>
+                            <span>Mabini, Batangas, Philippines</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">📞</span>
+                            <span>+63 912 345 6789</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">🕒</span>
+                            <span>6:00 AM - 8:00 PM Daily</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="menu.html">Menu</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="tracking.html">Track Order</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Categories -->
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="menu.html?category=Breads">Breads</a></li>
+                        <li><a href="menu.html?category=Cakes">Cakes</a></li>
+                        <li><a href="menu.html?category=Cupcakes">Cupcakes</a></li>
+                        <li><a href="menu.html?category=Other+Favorites">Pastries</a></li>
+                        <li><a href="menu.html?category=Specials">Special Offers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter & Social -->
+                <div class="footer-section footer-newsletter">
+                    <h3>Stay Updated</h3>
+                    <p class="newsletter-text">
+                        Get the latest updates on new products and special offers delivered to your inbox.
+                    </p>
+                    <form class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Your email address" required>
+                        <button type="submit" class="newsletter-btn">Subscribe</button>
+                    </form>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook">📘</a>
+                        <a href="#" class="social-link" aria-label="Instagram">📷</a>
+                        <a href="#" class="social-link" aria-label="Twitter">🐦</a>
+                        <a href="#" class="social-link" aria-label="YouTube">📺</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="copyright">
+                        &copy; 2024 BAKERIST — Mabini Bakery. All rights reserved.
+                    </div>
+                    <div class="footer-legal">
+                        <a href="privacy.html">Privacy Policy</a>
+                        <a href="terms.html">Terms of Service</a>
+                        <a href="contact.html">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Profile page functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user data
+            const user = getCurrentUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Populate form with user data
+            document.getElementById('name').value = user.name || '';
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('contact_no').value = user.contact_no || '';
+            document.getElementById('barangay').value = user.barangay || '';
+            document.getElementById('sitio').value = user.sitio || '';
+            document.getElementById('newsletter').checked = user.preferences?.newsletter || false;
+            document.getElementById('sms_notifications').checked = user.preferences?.sms_notifications !== false;
+
+            // Tab switching
+            const tabs = document.querySelectorAll('.sidebar-tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.dataset.tab;
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === tabName + '-tab') {
+                            content.classList.add('active');
+                        }
+                    });
+
+                    // Load order history if needed
+                    if (tabName === 'orders') {
+                        loadOrderHistory();
+                    }
+                });
+            });
+
+            // Password form handling
+            document.getElementById('password-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-new-password').value;
+
+                if (newPassword !== confirmPassword) {
+                    showToast('New passwords do not match', 'error');
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    showToast('Password must be at least 6 characters long', 'error');
+                    return;
+                }
+
+                const result = changePassword(user.id, currentPassword, newPassword);
+                
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    this.reset();
+                } else {
+                    showToast(result.message, 'error');
+                }
+            });
+
+            // Preferences form handling
+            document.getElementById('preferences-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const updates = {
+                    preferences: {
+                        newsletter: document.getElementById('newsletter').checked,
+                        sms_notifications: document.getElementById('sms_notifications').checked
+                    }
+                };
+
+                const result = updateUserProfile(user.id, updates);
+                
+                if (result.success) {
+                    showToast('Preferences updated successfully!', 'success');
+                } else {
+                    showToast('Failed to update preferences', 'error');
+                }
+            });
+        });
+
+        function loadOrderHistory() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            const orders = getUserOrderHistory(user.id);
+            const orderHistoryElement = document.getElementById('order-history');
+
+            if (orders.length === 0) {
+                orderHistoryElement.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size: 3rem; margin-bottom: var(--space-md);">📦</div>
+                        <h3>No orders yet</h3>
+                        <p>You haven't placed any orders with Bakerist.</p>
+                        <a href="menu.html" class="btn btn-primary">Start Shopping</a>
+                    </div>
+                `;
+                return;
+            }
+
+            orderHistoryElement.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <h4>Order #${order.id}</h4>
+                            <span class="order-date">${formatDisplayDate(order.created_at)}</span>
+                        </div>
+                        <div class="order-status">
+                            <span class="status-badge status-${order.tracking_status.toLowerCase().replace(' ', '-')}">
+                                ${order.tracking_status}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="order-details">
+                        <div class="order-items">
+                            ${order.items.map(item => `
+                                <div class="order-item">
+                                    <span class="item-name">${item.name} × ${item.qty}</span>
+                                    <span class="item-price">${formatCurrency(item.price * item.qty)}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="order-total">
+                            <strong>Total: ${formatCurrency(order.total)}</strong>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        <a href="tracking.html?order=${order.id}" class="btn btn-outline btn-sm">Track Order</a>
+                        <button class="btn btn-secondary btn-sm" onclick="reorder('${order.id}')">Reorder</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function reorder(orderId) {
+            showToast('Reorder feature coming soon!', 'info');
+        }
+    </script>
+</body>
+</html>

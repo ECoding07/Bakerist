@@ -2,7 +2,6 @@
 
 /**
  * Simple hash function for demo purposes (not secure for production)
- * In a real application, hashing should be done server-side
  */
 function simpleHash(str) {
     let hash = 0;
@@ -41,14 +40,18 @@ function getCurrentISODate() {
  * Format date for display
  */
 function formatDisplayDate(dateString) {
-    const options = { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    };
-    return new Date(dateString).toLocaleDateString('en-PH', options);
+    try {
+        const options = { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        return new Date(dateString).toLocaleDateString('en-PH', options);
+    } catch (error) {
+        return 'Invalid date';
+    }
 }
 
 /**
@@ -92,7 +95,7 @@ function showToast(message, type = 'info') {
             .toast-content {
                 display: flex;
                 align-items: center;
-                justify-content: between;
+                justify-content: space-between;
             }
             .toast-message {
                 flex: 1;
@@ -238,23 +241,22 @@ function isAdmin() {
     return user && user.role === 'admin';
 }
 
-// Export functions for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        simpleHash,
-        formatCurrency,
-        generateOrderId,
-        getCurrentISODate,
-        formatDisplayDate,
-        showToast,
-        isValidEmail,
-        isValidPhone,
-        generateCSV,
-        downloadCSV,
-        debounce,
-        getShippingFee,
-        isLoggedIn,
-        getCurrentUser,
-        isAdmin
-    };
+/**
+ * Get user order history
+ */
+function getUserOrderHistory(userId) {
+    const orders = JSON.parse(localStorage.getItem('bakerist_orders') || '[]');
+    return orders
+        .filter(order => order.user_id === userId)
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 }
+
+// Make functions available globally
+window.formatCurrency = formatCurrency;
+window.formatDisplayDate = formatDisplayDate;
+window.showToast = showToast;
+window.getCurrentUser = getCurrentUser;
+window.isAdmin = isAdmin;
+window.isLoggedIn = isLoggedIn;
+window.getUserOrderHistory = getUserOrderHistory;
+window.simpleHash = simpleHash;

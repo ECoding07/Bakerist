@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - BAKERIST Mabini Bakery</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="register">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <div class="logo-image">
+                        <img src="assets/images/bakerist-logo.png" alt="BAKERIST Mabini Bakery" style="height: 50px;">
+                    </div>
+                    <div class="logo-text">BAKERIST</div>
+                </a>
+                <div class="nav-actions">
+                    <a href="index.html" class="btn btn-outline btn-sm">Back to Home</a>
+                    <a href="login.html" class="btn btn-secondary btn-sm">Sign In</a>
+                    <div class="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Registration Section -->
+    <section class="section section-light" style="min-height: 80vh; display: flex; align-items: center;">
+        <div class="container">
+            <div class="register-container" style="max-width: 500px; margin: 0 auto;">
+                <div class="text-center mb-5">
+                    <h1>Join Bakerist</h1>
+                    <p class="text-muted">Create your account to start ordering</p>
+                </div>
+
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" id="name" class="form-control" required placeholder="Juan dela Cruz">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" class="form-control" required placeholder="your@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact_no" class="form-label">Phone Number</label>
+                        <input type="tel" id="contact_no" class="form-control" required placeholder="+63 912 345 6789">
+                        <div class="form-text">We'll use this for order updates and delivery</div>
+                    </div>
+
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+                        <div class="form-group">
+                            <label for="barangay" class="form-label">Barangay</label>
+                            <select id="barangay" class="form-control form-select" required>
+                                <option value="">Select Barangay</option>
+                                <option value="Anilao">Anilao</option>
+                                <option value="Bagalangit">Bagalangit</option>
+                                <option value="Mainit">Mainit</option>
+                                <option value="Balon-Anito">Balon-Anito</option>
+                                <option value="Matabungkay">Matabungkay</option>
+                                <option value="Nag-Iba">Nag-Iba</option>
+                                <option value="Laurel">Laurel</option>
+                                <option value="Sampaguita">Sampaguita</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sitio" class="form-label">Sitio/Landmark</label>
+                            <input type="text" id="sitio" class="form-control" required placeholder="Sitio Maliksi">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" class="form-control" required placeholder="At least 6 characters">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password" class="form-label">Confirm Password</label>
+                        <input type="password" id="confirm-password" class="form-control" required placeholder="Re-enter your password">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: var(--space-sm);">
+                            <input type="checkbox" id="newsletter" style="margin-top: 2px;">
+                            <span>Send me updates about new products and special offers</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label" style="display: flex; align-items: flex-start; gap: var(--space-sm);">
+                            <input type="checkbox" required style="margin-top: 2px;">
+                            <span>I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a></span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-bottom: var(--space-lg);">
+                        Create Account
+                    </button>
+
+                    <div class="text-center">
+                        <p>Already have an account? <a href="login.html" class="text-link">Sign in here</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

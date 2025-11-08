@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - BAKERIST Mabini Bakery</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="admin">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <div class="logo-image">
+                        <img src="assets/images/bakerist-logo.png" alt="BAKERIST Mabini Bakery" style="height: 50px;">
+                    </div>
+                    <div class="logo-text">BAKERIST</div>
+                </a>
+
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="menu.html" class="nav-link">Menu</a></li>
+                    <li><a href="tracking.html" class="nav-link">Track Order</a></li>
+                    <li class="logged-in"><a href="profile.html" class="nav-link">My Profile</a></li>
+                    <li class="admin-only"><a href="admin.html" class="nav-link active">Admin</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <div class="logged-in">
+                        <span class="user-name">User</span>
+                        <button class="btn btn-sm btn-secondary" onclick="logout()">Logout</button>
+                    </div>
+                    <div class="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Admin Dashboard -->
+    <section class="section section-light">
+        <div class="container">
+            <!-- Admin Header -->
+            <div class="admin-header">
+                <div class="admin-welcome">
+                    <h1>Admin Dashboard</h1>
+                    <p class="text-muted" id="admin-greeting">Loading...</p>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn btn-outline" onclick="exportOrdersCSV()" id="export-orders">
+                        Export Orders
+                    </button>
+                    <button class="btn btn-outline" onclick="exportProductsCSV()" id="export-products">
+                        Export Products
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Navigation -->
+            <nav class="admin-nav">
+                <a href="#" class="admin-nav-link active" data-view="overview">
+                    📊 Overview
+                </a>
+                <a href="#" class="admin-nav-link" data-view="orders">
+                    📦 Orders
+                </a>
+                <a href="#" class="admin-nav-link" data-view="products">
+                    🍞 Products
+                </a>
+                <a href="#" class="admin-nav-link" data-view="inventory">
+                    📋 Inventory
+                </a>
+                <a href="#" class="admin-nav-link" data-view="customers">
+                    👥 Customers
+                </a>
+                <a href="#" class="admin-nav-link" data-view="staff">
+                    👨‍💼 Staff
+                </a>
+            </nav>
+
+            <!-- Admin Views -->
+            <div class="admin-views">
+                <!-- Overview View -->
+                <div id="overview-view" class="admin-view active">
+                    <!-- Metrics Cards -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon">📦</div>
+                            <div class="metric-info">
+                                <h3 id="total-orders">0</h3>
+                                <p>Total Orders</p>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">🔄</div>
+                            <div class="metric-info">
+                                <h3 id="today-orders">0</h3>
+                                <p>Today's Orders</p>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">⏳</div>
+                            <div class="metric-info">
+                                <h3 id="pending-orders">0</h3>
+                                <p>Pending Orders</p>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">💰</div>
+                            <div class="metric-info">
+                                <h3 id="total-revenue">₱0.00</h3>
+                                <p>Total Revenue</p>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">💸</div>
+                            <div class="metric-info">
+                                <h3 id="today-revenue">₱0.00</h3>
+                                <p>Today's Revenue</p>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">⚠️</div>
+                            <div class="metric-info">
+                                <h3 id="low-stock">0</h3>
+                                <p>Low Stock Items</p>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">👥</div>
+                            <div class="metric-info">
+                                <h3 id="total-customers">0</h3>
+                                <p>Total Customers</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="dashboard-sections">
+                        <div class="dashboard-section">
+                            <h3>Recent Orders</h3>
+                            <div id="recent-orders" class="recent-orders">
+                                <!-- Recent orders will be loaded here -->
+                            </div>
+                        </div>
+
+                        <div class="dashboard-section">
+                            <h3>Low Stock Alerts</h3>
+                            <div id="low-stock-alerts" class="low-stock-alerts">
+                                <!-- Low stock alerts will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders View -->
+                <div id="orders-view" class="admin-view">
+                    <div class="view-header">
+                        <h2>Order Management</h2>
+                        <div class="view-filters">
+                            <input type="text" id="order-search" placeholder="Search orders..." class="form-control">
+                            <select id="status-filter" class="form-control">
+                                <option value="all">All Statuses</option>
+                                <option value="To Pay">To Pay</option>
+                                <option value="To Prepare">To Prepare</option>
+                                <option value="Out for Delivery">Out for Delivery</option>
+                                <option value="Delivered">Delivered</option>
+                            </select>
+                            <select id="payment-filter" class="form-control">
+                                <option value="all">All Payments</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Failed">Failed</option>
+                            </select>
+                            <select id="date-filter" class="form-control">
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="orders-table">
+                        <!-- Orders table will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Products View -->
+                <div id="products-view" class="admin-view">
+                    <div id="products-management">
+                        <!-- Products management will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Inventory View -->
+                <div id="inventory-view" class="admin-view">
+                    <div id="inventory-management">
+                        <!-- Inventory management will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Customers View -->
+                <div id="customers-view" class="admin-view">
+                    <div class="view-header">
+                        <h2>Customer Management</h2>
+                        <p class="text-muted">View and manage customer accounts</p>
+                    </div>
+                    <div class="empty-state">
+                        <div style="font-size: 3rem; margin-bottom: var(--space-md);">👥</div>
+                        <h3>Customer Management</h3>
+                        <p>Customer management features will be implemented here.</p>
+                    </div>
+                </div>
+
+                <!-- Staff View -->
+                <div id="staff-view" class="admin-view">
+                    <div id="staff-management">
+                        <!-- Staff management will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Order Details Modal -->
+    <div id="order-details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Order Details</h3>
+                <button class="modal-close" onclick="closeModal('order-details-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Order details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- About & Contact -->
+                <div class="footer-section footer-about">
+                    <div class="footer-logo">
+                        <img src="assets/images/bakerist-logo.png" alt="BAKERIST">
+                        <div class="footer-logo-text">BAKERIST</div>
+                    </div>
+                    <p class="footer-about-text">
+                        Mabini's favorite bakery since 2024. Fresh baked goods made with traditional recipes 
+                        and modern love. We bring the warmth of Filipino baking to your doorstep.
+                    </p>
+                    <div class="footer-contact">
+                        <div class="contact-item">
+                            <span class="contact-icon">📍</span>
+                            <span>Mabini, Batangas, Philippines</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">📞</span>
+                            <span>+63 912 345 6789</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">🕒</span>
+                            <span>6:00 AM - 8:00 PM Daily</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="menu.html">Menu</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="tracking.html">Track Order</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Categories -->
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="menu.html?category=Breads">Breads</a></li>
+                        <li><a href="menu.html?category=Cakes">Cakes</a></li>
+                        <li><a href="menu.html?category=Cupcakes">Cupcakes</a></li>
+                        <li><a href="menu.html?category=Other+Favorites">Pastries</a></li>
+                        <li><a href="menu.html?category=Specials">Special Offers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter & Social -->
+                <div class="footer-section footer-newsletter">
+                    <h3>Stay Updated</h3>
+                    <p class="newsletter-text">
+                        Get the latest updates on new products and special offers delivered to your inbox.
+                    </p>
+                    <form class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Your email address" required>
+                        <button type="submit" class="newsletter-btn">Subscribe</button>
+                    </form>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook">📘</a>
+                        <a href="#" class="social-link" aria-label="Instagram">📷</a>
+                        <a href="#" class="social-link" aria-label="Twitter">🐦</a>
+                        <a href="#" class="social-link" aria-label="YouTube">📺</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="copyright">
+                        &copy; 2024 BAKERIST — Mabini Bakery. All rights reserved.
+                    </div>
+                    <div class="footer-legal">
+                        <a href="privacy.html">Privacy Policy</a>
+                        <a href="terms.html">Terms of Service</a>
+                        <a href="contact.html">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Update admin greeting
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = getCurrentUser();
+            if (user) {
+                const greeting = document.getElementById('admin-greeting');
+                const now = new Date().getHours();
+                let timeGreeting = 'Good morning';
+                
+                if (now >= 12 && now < 18) timeGreeting = 'Good afternoon';
+                if (now >= 18) timeGreeting = 'Good evening';
+                
+                greeting.textContent = `${timeGreeting}, ${user.name}! Welcome to your dashboard.`;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -16,6 +16,37 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
+    
+    <style>
+        /* Ensure auth elements display properly */
+        .logged-in.hidden {
+            display: none !important;
+        }
+
+        .logged-out.hidden {
+            display: none !important;
+        }
+
+        .logged-in:not(.hidden) {
+            display: block !important;
+        }
+
+        /* User dropdown visibility */
+        .user-dropdown-menu {
+            display: none;
+        }
+
+        .user-dropdown:hover .user-dropdown-menu {
+            display: block;
+        }
+
+        /* Mobile dropdown */
+        @media (max-width: 768px) {
+            .user-dropdown-menu.show-mobile {
+                display: block !important;
+            }
+        }
+    </style>
 </head>
 <body data-page="home">
     <!-- Header -->
@@ -35,8 +66,8 @@
                     <li><a href="index.html" class="nav-link active">Home</a></li>
                     <li><a href="menu.html" class="nav-link">Menu</a></li>
                     <li><a href="tracking.html" class="nav-link">Track Order</a></li>
-                    <li class="logged-out"><a href="login.html" class="nav-link">Login</a></li>
-                    <li class="logged-in hidden"><a href="profile.html" class="nav-link">My Account</a></li>
+                    <!-- Login link removed from main nav - now in user dropdown -->
+                    <li class="logged-in hidden"><a href="profile.html" class="nav-link">My Profile</a></li>
                     <li class="admin-only hidden"><a href="admin.html" class="nav-link">Admin</a></li>
                 </ul>
 
@@ -47,9 +78,34 @@
                     </a>
                     
                     <!-- User Menu (logged in) -->
-                    <div class="logged-in hidden">
-                        <span class="user-name">User</span>
-                        <button class="btn btn-sm btn-secondary" onclick="logout()">Logout</button>
+                    <div class="logged-in hidden user-menu-container">
+                        <div class="user-dropdown">
+                            <button class="user-dropdown-btn">
+                                <span class="user-avatar">👤</span>
+                                <span class="user-name">User</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="user-dropdown-menu">
+                                <a href="profile.html" class="dropdown-item">
+                                    <span class="dropdown-icon">👤</span>
+                                    My Profile
+                                </a>
+                                <a href="profile.html#orders-tab" class="dropdown-item">
+                                    <span class="dropdown-icon">📦</span>
+                                    My Orders
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item logout-btn" onclick="logout()">
+                                    <span class="dropdown-icon">🚪</span>
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Login Button (logged out) -->
+                    <div class="logged-out">
+                        <a href="login.html" class="btn btn-secondary btn-sm">Login</a>
                     </div>
                     
                     <!-- Mobile Menu Toggle -->
@@ -97,133 +153,155 @@
         </div>
     </section>
 
-    <!-- Featured Products Section -->
-    <section id="featured" class="section section-light">
-        <div class="container">
-            <div class="text-center">
-                <h2>Our Fresh Bakes</h2>
-                <p class="mb-5">Handcrafted daily with traditional recipes and modern love</p>
-            </div>
-            
-            <div id="featured-products" class="products-grid">
-                <!-- Featured products will be loaded by JavaScript -->
-                <div class="loading-spinner">
-                    <div class="spinner"></div>
-                    <p>Loading our fresh bakes...</p>
-                </div>
-            </div>
-            
-            <div class="text-center mt-5">
-                <a href="menu.html" class="btn btn-primary btn-lg">View Full Menu</a>
-            </div>
-        </div>
-    </section>
-
     <!-- About Section -->
     <section class="section section-beige">
         <div class="container">
             <div class="text-center">
                 <h2>Our Bakery Story</h2>
+                <p class="mb-5">Bringing traditional Filipino baking to Mabini with modern love and care</p>
             </div>
             
-            <div style="max-width: 800px; margin: 0 auto;">
+            <div class="about-grid">
+                <!-- Mission Box -->
+                <div class="mission-vision-box mission-box">
+                    <div class="box-icon">🎯</div>
+                    <h3 class="box-title">Our Mission</h3>
+                    <div class="box-content">
+                        <p>To bring the authentic taste of Filipino baked goods to every home in Mabini and beyond, 
+                        using traditional recipes passed down through generations while embracing modern baking techniques.</p>
+                        <p>We commit to using only the finest ingredients and maintaining the highest standards of 
+                        quality in every product we bake.</p>
+                    </div>
+                </div>
+
+                <!-- Vision Box -->
+                <div class="mission-vision-box vision-box">
+                    <div class="box-icon">🔭</div>
+                    <h3 class="box-title">Our Vision</h3>
+                    <div class="box-content">
+                        <p>To be Mabini's most beloved bakery, known for quality, freshness, and community spirit. 
+                        We envision a future where every family starts their day with our warm, freshly baked goods.</p>
+                        <p>To expand our reach while maintaining our commitment to traditional flavors and 
+                        community values.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Values Section -->
+            <div class="values-section">
                 <div class="text-center">
-                    <h3>Mission</h3>
-                    <p>
-                        To bring the authentic taste of Filipino baked goods to every home in Mabini and beyond, 
-                        using traditional recipes passed down through generations while embracing modern baking techniques.
-                    </p>
+                    <h3>Our Core Values</h3>
+                    <p class="mb-5">The principles that guide everything we do</p>
+                </div>
+                
+                <div class="values-grid">
+                    <div class="value-card">
+                        <span class="value-icon">🍞</span>
+                        <h4 class="value-title">Freshness First</h4>
+                        <p class="value-description">Baked fresh daily, never frozen or day-old. Quality you can taste in every bite.</p>
+                    </div>
                     
-                    <h3>Vision</h3>
-                    <p>
-                        To be Mabini's most beloved bakery, known for quality, freshness, and community spirit. 
-                        We envision a future where every family starts their day with our warm, freshly baked goods.
-                    </p>
+                    <div class="value-card">
+                        <span class="value-icon">❤️</span>
+                        <h4 class="value-title">Made with Love</h4>
+                        <p class="value-description">Traditional recipes prepared with passion and attention to every detail.</p>
+                    </div>
                     
-                    <h3>Why Choose Bakerist?</h3>
-                    <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-xl); margin-top: var(--space-2xl);">
-                        <div class="feature">
-                            <div style="font-size: 2.5rem; margin-bottom: var(--space-sm);">🍞</div>
-                            <h4>Fresh Daily</h4>
-                            <p>Baked fresh every morning, never day-old</p>
-                        </div>
-                        <div class="feature">
-                            <div style="font-size: 2.5rem; margin-bottom: var(--space-sm);">❤️</div>
-                            <h4>Made with Love</h4>
-                            <p>Traditional recipes with heart and soul</p>
-                        </div>
-                        <div class="feature">
-                            <div style="font-size: 2.5rem; margin-bottom: var(--space-sm);">🚚</div>
-                            <h4>Free Delivery</h4>
-                            <p>Within Mabini for orders over ₱300</p>
-                        </div>
-                        <div class="feature">
-                            <div style="font-size: 2.5rem; margin-bottom: var(--space-sm);">🏆</div>
-                            <h4>Quality Guaranteed</h4>
-                            <p>Only the finest ingredients used</p>
-                        </div>
+                    <div class="value-card">
+                        <span class="value-icon">🤝</span>
+                        <h4 class="value-title">Community Focus</h4>
+                        <p class="value-description">Supporting local farmers and being an active part of Mabini community.</p>
+                    </div>
+                    
+                    <div class="value-card">
+                        <span class="value-icon">🌟</span>
+                        <h4 class="value-title">Excellence</h4>
+                        <p class="value-description">Consistently delivering the highest quality products and customer service.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Testimonials Section -->
-    <section class="section section-light">
+
+    <!-- User Quick Access Section (only shown when logged in) -->
+    <section id="user-quick-access" class="section section-beige logged-in hidden">
         <div class="container">
-            <div class="text-center">
-                <h2>What Our Customers Say</h2>
+            <div class="text-center mb-5">
+                <h2 id="welcome-message">Welcome Back!</h2>
+                <p class="text-muted">Manage your account and track your orders</p>
             </div>
             
-            <div class="testimonials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-xl); margin-top: var(--space-2xl);">
-                <div class="testimonial-card" style="background: var(--white); padding: var(--space-xl); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
-                    <div class="testimonial-text" style="font-style: italic; margin-bottom: var(--space-lg);">
-                        "The best pandesal in Mabini! Fresh every morning and always delivered with a smile. 
-                        My family starts every day with Bakerist breads."
-                    </div>
-                    <div class="testimonial-author">
-                        <strong>Maria Santos</strong>
-                        <div style="color: var(--gray-medium); font-size: 0.9rem;">Regular Customer</div>
-                    </div>
+            <div class="quick-access-grid">
+                <div class="quick-access-card">
+                    <div class="access-icon">👤</div>
+                    <h3>Profile Information</h3>
+                    <p>Update your personal details, address, and contact information</p>
+                    <a href="profile.html" class="btn btn-outline">Edit Profile</a>
                 </div>
                 
-                <div class="testimonial-card" style="background: var(--white); padding: var(--space-xl); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
-                    <div class="testimonial-text" style="font-style: italic; margin-bottom: var(--space-lg);">
-                        "Ordered an Ube Cake for my daughter's birthday and it was absolutely delicious! 
-                        The cake was moist, not too sweet, and the delivery was right on time."
-                    </div>
-                    <div class="testimonial-author">
-                        <strong>Juan dela Cruz</strong>
-                        <div style="color: var(--gray-medium); font-size: 0.9rem;">Anilao Resident</div>
-                    </div>
+                <div class="quick-access-card">
+                    <div class="access-icon">📦</div>
+                    <h3>Order History</h3>
+                    <p>View your recent orders, track deliveries, and reorder favorites</p>
+                    <a href="profile.html#orders-tab" class="btn btn-outline">View Orders</a>
                 </div>
                 
-                <div class="testimonial-card" style="background: var(--white); padding: var(--space-xl); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
-                    <div class="testimonial-text" style="font-style: italic; margin-bottom: var(--space-lg);">
-                        "Their ensaymada is to die for! So soft and buttery. I always order extra for my 
-                        coworkers and they can't get enough. Bakerist never disappoints!"
-                    </div>
-                    <div class="testimonial-author">
-                        <strong>Ana Reyes</strong>
-                        <div style="color: var(--gray-medium); font-size: 0.9rem;">Local Teacher</div>
-                    </div>
+                <div class="quick-access-card">
+                    <div class="access-icon">❤️</div>
+                    <h3>Favorite Items</h3>
+                    <p>Quickly reorder your most-loved bakery items</p>
+                    <button class="btn btn-outline" onclick="showFavorites()">View Favorites</button>
+                </div>
+                
+                <div class="quick-access-card">
+                    <div class="access-icon">⚡</div>
+                    <h3>Quick Reorder</h3>
+                    <p>Your most recent order is ready for quick checkout</p>
+                    <button class="btn btn-primary" onclick="quickReorder()">Reorder Now</button>
+                </div>
+            </div>
+            
+            <!-- Recent Orders Preview -->
+            <div class="recent-orders-preview">
+                <h3 class="text-center mb-4">Recent Orders</h3>
+                <div id="recent-orders-home" class="orders-preview-container">
+                    <!-- Recent orders will be loaded here -->
+                </div>
+                <div class="text-center mt-4">
+                    <a href="profile.html#orders-tab" class="btn btn-secondary">View All Orders</a>
                 </div>
             </div>
         </div>
     </section>
-
+    
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <!-- Store Info -->
-                <div class="footer-section">
-                    <h3>BAKERIST</h3>
-                    <p>Mabini's favorite bakery since 2024. Fresh baked goods made with traditional recipes and modern love.</p>
-                    <div class="contact-info" style="margin-top: var(--space-lg);">
-                        <div>📍 Mabini, Batangas, Philippines</div>
-                        <div>📞 +63 912 345 6789</div>
-                        <div>🕒 6:00 AM - 8:00 PM Daily</div>
+                <!-- About & Contact -->
+                <div class="footer-section footer-about">
+                    <div class="footer-logo">
+                        <img src="assets/images/bakerist-logo.png" alt="BAKERIST">
+                        <div class="footer-logo-text">BAKERIST</div>
+                    </div>
+                    <p class="footer-about-text">
+                        Mabini's favorite bakery since 2024. Fresh baked goods made with traditional recipes 
+                        and modern love. We bring the warmth of Filipino baking to your doorstep.
+                    </p>
+                    <div class="footer-contact">
+                        <div class="contact-item">
+                            <span class="contact-icon">📍</span>
+                            <span>Mabini, Batangas, Philippines</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">📞</span>
+                            <span>+63 912 345 6789</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">🕒</span>
+                            <span>6:00 AM - 8:00 PM Daily</span>
+                        </div>
                     </div>
                 </div>
 
@@ -233,8 +311,8 @@
                     <ul class="footer-links">
                         <li><a href="index.html">Home</a></li>
                         <li><a href="menu.html">Menu</a></li>
-                        <li><a href="tracking.html">Track Order</a></li>
                         <li><a href="about.html">About Us</a></li>
+                        <li><a href="tracking.html">Track Order</a></li>
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
@@ -246,38 +324,95 @@
                         <li><a href="menu.html?category=Breads">Breads</a></li>
                         <li><a href="menu.html?category=Cakes">Cakes</a></li>
                         <li><a href="menu.html?category=Cupcakes">Cupcakes</a></li>
-                        <li><a href="menu.html?category=Other+Favorites">Other Favorites</a></li>
+                        <li><a href="menu.html?category=Other+Favorites">Pastries</a></li>
                         <li><a href="menu.html?category=Specials">Special Offers</a></li>
                     </ul>
                 </div>
 
-                <!-- Social & Newsletter -->
-                <div class="footer-section">
-                    <h3>Stay Connected</h3>
-                    <p>Follow us for fresh updates and special offers!</p>
-                    <div class="social-links" style="display: flex; gap: var(--space-sm); margin: var(--space-lg) 0;">
-                        <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; transition: background var(--transition-fast);">📘</a>
-                        <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; transition: background var(--transition-fast);">📷</a>
-                        <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; transition: background var(--transition-fast);">🐦</a>
+                <!-- Newsletter & Social -->
+                <div class="footer-section footer-newsletter">
+                    <h3>Stay Updated</h3>
+                    <p class="newsletter-text">
+                        Get the latest updates on new products and special offers delivered to your inbox.
+                    </p>
+                    <form class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Your email address" required>
+                        <button type="submit" class="newsletter-btn">Subscribe</button>
+                    </form>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook">📘</a>
+                        <a href="#" class="social-link" aria-label="Instagram">📷</a>
+                        <a href="#" class="social-link" aria-label="Twitter">🐦</a>
+                        <a href="#" class="social-link" aria-label="YouTube">📺</a>
                     </div>
                 </div>
             </div>
 
             <!-- Footer Bottom -->
             <div class="footer-bottom">
-                <p>&copy; 2024 BAKERIST — Mabini Bakery. All rights reserved. | Made with ❤️ in Mabini, Batangas</p>
+                <div class="footer-bottom-content">
+                    <div class="copyright">
+                        &copy; 2024 BAKERIST — Mabini Bakery. All rights reserved.
+                    </div>
+                    <div class="footer-legal">
+                        <a href="privacy.html">Privacy Policy</a>
+                        <a href="terms.html">Terms of Service</a>
+                        <a href="contact.html">Contact Us</a>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
+
+    <!-- Debug Button (remove after testing) -->
+   <!-- <div style="position: fixed; bottom: 10px; right: 10px; z-index: 9999;">
+        <button onclick="debugAuth()" style="background: red; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">Debug Auth</button>
+    </div> -->
 
     <!-- Scripts -->
     <script src="js/utils.js"></script>
     <script src="js/init.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
     
     <script>
-        // Mobile menu toggle
+        // Debug function
+        function debugAuth() {
+            console.log('=== AUTH DEBUG ===');
+            console.log('Session:', sessionStorage.getItem('bakerist_session'));
+            console.log('Current User:', getCurrentUser());
+            console.log('Logged in elements:', document.querySelectorAll('.logged-in'));
+            console.log('Logged out elements:', document.querySelectorAll('.logged-out'));
+            
+            const user = getCurrentUser();
+            if (user) {
+                console.log('✅ User found:', user.name);
+                // Force show logged-in elements
+                document.querySelectorAll('.logged-in').forEach(el => {
+                    el.style.display = 'block';
+                    el.classList.remove('hidden');
+                });
+                document.querySelectorAll('.logged-out').forEach(el => {
+                    el.style.display = 'none';
+                });
+            } else {
+                console.log('❌ No user logged in');
+            }
+            
+            updateAuthUI();
+        }
+
+        // Initialize authentication UI when page loads
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔄 Initializing authentication UI...');
+            
+            // Update auth UI immediately
+            if (typeof updateAuthUI === 'function') {
+                updateAuthUI();
+            } else {
+                console.error('❌ updateAuthUI function not found!');
+            }
+            
             const hamburger = document.querySelector('.hamburger');
             const navMenu = document.querySelector('.nav-menu');
             
@@ -317,13 +452,149 @@
             }
             
             createFloatingPastries();
+            
+            // Load user-specific content
+            initializeUserContent();
         });
+        
+        // Initialize user-specific content
+        function initializeUserContent() {
+            const user = getCurrentUser();
+            console.log('👤 Current user:', user);
+            
+            if (user) {
+                console.log('✅ User is logged in, showing profile content...');
+                
+                // Show welcome message and user sections
+                loadRecentOrdersHome();
+                
+                // Update welcome message with user's name
+                const welcomeMessage = document.getElementById('welcome-message');
+                if (welcomeMessage) {
+                    welcomeMessage.textContent = `Welcome Back, ${user.name.split(' ')[0]}!`;
+                }
+                
+                // Update user name in dropdown
+                const userNameElements = document.querySelectorAll('.user-name');
+                userNameElements.forEach(element => {
+                    element.textContent = user.name.split(' ')[0]; // Show first name only
+                });
+                
+                // Force show logged-in elements
+                document.querySelectorAll('.logged-in').forEach(el => {
+                    el.style.display = 'block';
+                    el.classList.remove('hidden');
+                });
+                document.querySelectorAll('.logged-out').forEach(el => {
+                    el.style.display = 'none';
+                });
+            } else {
+                console.log('❌ No user logged in');
+            }
+        }
         
         // Logout function
         function logout() {
             sessionStorage.removeItem('bakerist_session');
             window.location.href = 'index.html';
         }
+
+        // Load recent orders for logged-in users
+        function loadRecentOrdersHome() {
+            const user = getCurrentUser();
+            const container = document.getElementById('recent-orders-home');
+            
+            if (!user || !container) return;
+            
+            const orders = getUserOrderHistory(user.id).slice(0, 3); // Show last 3 orders
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="no-orders-message">
+                        <span class="icon">📦</span>
+                        <h4>No orders yet</h4>
+                        <p>You haven't placed any orders with Bakerist.</p>
+                        <a href="menu.html" class="btn btn-primary mt-3">Start Shopping</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = orders.map(order => `
+                <div class="order-preview-card">
+                    <div class="order-preview-info">
+                        <div class="order-preview-id">${order.id}</div>
+                        <div class="order-preview-date">${formatDisplayDate(order.created_at)}</div>
+                        <div class="order-preview-items">
+                            ${order.items.slice(0, 2).map(item => `${item.name} (${item.qty})`).join(', ')}
+                            ${order.items.length > 2 ? ` and ${order.items.length - 2} more items` : ''}
+                        </div>
+                    </div>
+                    <div class="order-preview-meta">
+                        <div class="order-preview-total">${formatCurrency(order.total)}</div>
+                        <div class="order-preview-status status-${order.tracking_status.toLowerCase().replace(' ', '-')}">
+                            ${order.tracking_status}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Quick reorder function
+        function quickReorder() {
+            const user = getCurrentUser();
+            if (!user) return;
+            
+            const orders = getUserOrderHistory(user.id);
+            if (orders.length === 0) {
+                showToast('No recent orders found', 'info');
+                return;
+            }
+            
+            const latestOrder = orders[0];
+            showToast(`Adding ${latestOrder.items.length} items from your last order to cart`, 'info');
+            // In a real implementation, this would add items to cart
+        }
+        
+        // Show favorites (placeholder)
+        function showFavorites() {
+            showToast('Favorite items feature coming soon!', 'info');
+        }
+        
+        // User dropdown functionality for mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const userDropdowns = document.querySelectorAll('.user-dropdown');
+            userDropdowns.forEach(dropdown => {
+                dropdown.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        const menu = this.querySelector('.user-dropdown-menu');
+                        menu.classList.toggle('show-mobile');
+                    }
+                });
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.user-dropdown')) {
+                    document.querySelectorAll('.user-dropdown-menu').forEach(menu => {
+                        menu.classList.remove('show-mobile');
+                    });
+                }
+            });
+        });
+        
+        // Add mobile-specific CSS for dropdown
+        const mobileDropdownStyle = document.createElement('style');
+        mobileDropdownStyle.textContent = `
+            @media (max-width: 768px) {
+                .user-dropdown-menu.show-mobile {
+                    transform: translateY(0) !important;
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                }
+            }
+        `;
+        document.head.appendChild(mobileDropdownStyle);
     </script>
 </body>
 </html>
