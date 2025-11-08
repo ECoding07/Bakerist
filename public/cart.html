@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - BAKERIST Mabini Bakery</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="cart">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <div class="logo-image">
+                        <img src="assets/images/bakerist-logo.png" alt="BAKERIST Mabini Bakery" style="height: 50px;">
+                    </div>
+                    <div class="logo-text">BAKERIST</div>
+                </a>
+
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="menu.html" class="nav-link">Menu</a></li>
+                    <li><a href="tracking.html" class="nav-link">Track Order</a></li>
+                    <li class="logged-in hidden"><a href="profile.html" class="nav-link">My Profile</a></li>
+                    <li class="admin-only hidden"><a href="admin.html" class="nav-link">Admin</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="cart.html" class="btn btn-outline btn-sm">
+                        🛒 Cart <span id="cart-count">0</span>
+                    </a>
+                    
+                    <div class="logged-in hidden user-menu-container">
+                        <div class="user-dropdown">
+                            <button class="user-dropdown-btn">
+                                <span class="user-avatar">👤</span>
+                                <span class="user-name">User</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="user-dropdown-menu">
+                                <a href="profile.html" class="dropdown-item">👤 My Profile</a>
+                                <a href="profile.html#orders-tab" class="dropdown-item">📦 My Orders</a>
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item logout-btn" onclick="logout()">🚪 Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="logged-out">
+                        <a href="login.html" class="btn btn-secondary btn-sm">Login</a>
+                    </div>
+                    
+                    <div class="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Cart Section -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="cart-header">
+                <h1>Your Shopping Cart</h1>
+                <p class="text-muted">Review your items before checkout</p>
+            </div>
+
+            <!-- Empty Cart Message -->
+            <div id="empty-cart" class="empty-cart hidden">
+                <div class="empty-cart-content">
+                    <span class="empty-cart-icon">🛒</span>
+                    <h3>Your cart is empty</h3>
+                    <p>Add some delicious bakery items to get started!</p>
+                    <a href="menu.html" class="btn btn-primary">Browse Menu</a>
+                </div>
+            </div>
+
+            <!-- Cart Content -->
+            <div id="cart-content" class="cart-content">
+                <div class="cart-items-section">
+                    <div class="section-header">
+                        <h3>Cart Items</h3>
+                        <button class="btn btn-sm btn-outline" onclick="clearCart()">Clear Cart</button>
+                    </div>
+                    
+                    <div id="cart-items" class="cart-items">
+                        <!-- Cart items will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="cart-summary">
+                    <h3>Order Summary</h3>
+                    
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="cart-subtotal">₱0.00</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Shipping Fee:</span>
+                        <span id="cart-shipping">₱0.00</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Estimated Tax:</span>
+                        <span id="cart-tax">₱0.00</span>
+                    </div>
+                    
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span id="cart-total">₱0.00</span>
+                    </div>
+
+                    <div class="shipping-note">
+                        <p>🚚 <strong>Free shipping</strong> on orders over ₱300</p>
+                    </div>
+
+                    <div class="checkout-actions">
+                        <button class="btn btn-primary btn-lg" onclick="proceedToCheckout()" style="width: 100%;">
+                            Proceed to Checkout
+                        </button>
+                        
+                        <a href="menu.html" class="btn btn-outline" style="width: 100%; margin-top: 1rem;">
+                            Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section footer-about">
+                    <div class="footer-logo">
+                        <img src="assets/images/bakerist-logo.png" alt="BAKERIST">
+                        <div class="footer-logo-text">BAKERIST</div>
+                    </div>
+                    <p class="footer-about-text">
+                        Mabini's favorite bakery since 2024. Fresh baked goods made with traditional recipes and modern love.
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="copyright">
+                        &copy; 2024 BAKERIST — Mabini Bakery. All rights reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/cart.js"></script>
+    <script>
+        // Initialize cart when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCart();
+        });
+    </script>
+</body>
+</html>

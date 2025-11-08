@@ -1,0 +1,245 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Order Confirmation - BAKERIST Mabini Bakery</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    </head>
+    <body data-page="confirmation">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <nav class="navbar">
+                    <a href="index.html" class="logo">
+                        <div class="logo-image">
+                            <img src="assets/images/bakerist-logo.png" alt="BAKERIST Mabini Bakery" style="height: 50px;">
+                        </div>
+                        <div class="logo-text">BAKERIST</div>
+                    </a>
+
+                    <ul class="nav-menu">
+                        <li><a href="index.html" class="nav-link">Home</a></li>
+                        <li><a href="menu.html" class="nav-link">Menu</a></li>
+                        <li><a href="tracking.html" class="nav-link">Track Order</a></li>
+                        <li class="logged-in hidden"><a href="profile.html" class="nav-link">My Profile</a></li>
+                        <li class="admin-only hidden"><a href="admin.html" class="nav-link">Admin</a></li>
+                    </ul>
+
+                    <div class="nav-actions">
+                        <a href="cart.html" class="btn btn-outline btn-sm">
+                            🛒 Cart <span id="cart-count">0</span>
+                        </a>
+                        
+                        <div class="logged-in hidden user-menu-container">
+                            <div class="user-dropdown">
+                                <button class="user-dropdown-btn">
+                                    <span class="user-avatar">👤</span>
+                                    <span class="user-name">User</span>
+                                    <span class="dropdown-arrow">▼</span>
+                                </button>
+                                <div class="user-dropdown-menu">
+                                    <a href="profile.html" class="dropdown-item">👤 My Profile</a>
+                                    <a href="profile.html#orders-tab" class="dropdown-item">📦 My Orders</a>
+                                    <div class="dropdown-divider"></div>
+                                    <button class="dropdown-item logout-btn" onclick="logout()">🚪 Logout</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="hamburger">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Confirmation Section -->
+        <section class="section section-light">
+            <div class="container">
+                <div class="confirmation-content">
+                    <div class="confirmation-icon">🎉</div>
+                    <h1>Order Confirmed!</h1>
+                    <p class="confirmation-subtitle">Thank you for your order. We're preparing it with love!</p>
+                    
+                    <div class="order-details-card">
+                        <div class="order-header">
+                            <h3>Order Details</h3>
+                            <div class="order-status status-to-prepare">To Prepare</div>
+                        </div>
+                        
+                        <div class="order-info">
+                            <div class="info-row">
+                                <span>Order Number:</span>
+                                <strong id="order-number">Loading...</strong>
+                            </div>
+                            <div class="info-row">
+                                <span>Order Date:</span>
+                                <span id="order-date">Loading...</span>
+                            </div>
+                            <div class="info-row">
+                                <span>Total Amount:</span>
+                                <strong id="order-total">Loading...</strong>
+                            </div>
+                            <div class="info-row">
+                                <span>Payment Method:</span>
+                                <span id="payment-method">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="delivery-info-card">
+                        <h3>Delivery Information</h3>
+                        <div id="delivery-info">
+                            <!-- Delivery info will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="next-steps">
+                        <h3>What's Next?</h3>
+                        <div class="steps-timeline">
+                            <div class="step completed">
+                                <div class="step-icon">✅</div>
+                                <div class="step-content">
+                                    <strong>Order Placed</strong>
+                                    <p>We've received your order</p>
+                                </div>
+                            </div>
+                            <div class="step active">
+                                <div class="step-icon">👨‍🍳</div>
+                                <div class="step-content">
+                                    <strong>Preparing Your Order</strong>
+                                    <p>Our bakers are working on it</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-icon">🚚</div>
+                                <div class="step-content">
+                                    <strong>Out for Delivery</strong>
+                                    <p>Your order is on the way</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-icon">🏠</div>
+                                <div class="step-content">
+                                    <strong>Delivered</strong>
+                                    <p>Enjoy your fresh baked goods!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="confirmation-actions">
+                        <a href="tracking.html" class="btn btn-primary">Track Your Order</a>
+                        <a href="menu.html" class="btn btn-outline">Continue Shopping</a>
+                        <button class="btn btn-secondary" onclick="printOrder()">Print Receipt</button>
+                    </div>
+
+                    <div class="support-reminder">
+                        <p>📞 <strong>Need help?</strong> Contact us at <strong>+63 912 345 6789</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section footer-about">
+                        <div class="footer-logo">
+                            <img src="assets/images/bakerist-logo.png" alt="BAKERIST">
+                            <div class="footer-logo-text">BAKERIST</div>
+                        </div>
+                        <p class="footer-about-text">
+                            Mabini's favorite bakery since 2024. Fresh baked goods made with traditional recipes and modern love.
+                        </p>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <div class="footer-bottom-content">
+                        <div class="copyright">
+                            &copy; 2024 BAKERIST — Mabini Bakery. All rights reserved.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="js/utils.js"></script>
+        <script src="js/auth.js"></script>
+        <script src="js/main.js"></script>
+        <script>
+            // Load order details when page loads
+            document.addEventListener('DOMContentLoaded', function() {
+                loadOrderConfirmation();
+            });
+
+            function loadOrderConfirmation() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const orderId = urlParams.get('order_id');
+                
+                if (!orderId) {
+                    showToast('No order found', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                    return;
+                }
+                
+                const orders = JSON.parse(localStorage.getItem('bakerist_orders') || '[]');
+                const order = orders.find(o => o.id === orderId);
+                
+                if (!order) {
+                    showToast('Order not found', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                    return;
+                }
+                
+                // Display order details
+                document.getElementById('order-number').textContent = order.id;
+                document.getElementById('order-date').textContent = formatDisplayDate(order.created_at);
+                document.getElementById('order-total').textContent = formatCurrency(order.total);
+                document.getElementById('payment-method').textContent = order.payment_method;
+                
+                // Display delivery info
+                document.getElementById('delivery-info').innerHTML = `
+                    <div class="info-row">
+                        <span>Name:</span>
+                        <span>${order.delivery_info.full_name}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Address:</span>
+                        <span>${order.delivery_info.sitio}, ${order.delivery_info.barangay}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Contact:</span>
+                        <span>${order.delivery_info.contact}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Delivery Method:</span>
+                        <span>${order.delivery_info.delivery_method}</span>
+                    </div>
+                    ${order.delivery_info.instructions ? `
+                    <div class="info-row">
+                        <span>Instructions:</span>
+                        <span>${order.delivery_info.instructions}</span>
+                    </div>
+                    ` : ''}
+                `;
+            }
+
+            function printOrder() {
+                window.print();
+            }
+        </script>
+    </body>
+    </html>

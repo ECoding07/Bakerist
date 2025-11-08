@@ -551,6 +551,7 @@ function loadProductsView() {
                 <button class="btn btn-primary" onclick="showAddProductForm()">
                     Add New Product
                 </button>
+                
             ` : ''}
         </div>
 

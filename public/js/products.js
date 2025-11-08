@@ -10,9 +10,11 @@ let sortBy = 'name';
  * Initialize menu functionality
  */
 function initializeMenu() {
+    console.log('🍞 Initializing menu...');
     loadProducts();
     setupEventListeners();
     displayProducts();
+    updateCartCountFromProducts(); // Ensure cart count is updated
 }
 
 /**
@@ -70,7 +72,8 @@ function setupEventListeners() {
             
             // Update category
             currentCategory = e.target.dataset.category;
-            document.getElementById('category-filter').value = currentCategory;
+            const categoryFilter = document.getElementById('category-filter');
+            if (categoryFilter) categoryFilter.value = currentCategory;
             filterProducts();
         });
     });
@@ -132,12 +135,12 @@ function displayProducts() {
     
     if (filteredProducts.length === 0) {
         container.style.display = 'none';
-        noResults.classList.remove('hidden');
+        if (noResults) noResults.classList.remove('hidden');
         return;
     }
     
     container.style.display = 'grid';
-    noResults.classList.add('hidden');
+    if (noResults) noResults.classList.add('hidden');
     
     container.innerHTML = filteredProducts.map(product => `
         <div class="product-card" data-product-id="${product.id}">
@@ -193,6 +196,8 @@ function viewProductDetails(productId) {
     const modal = document.getElementById('product-modal');
     const productName = document.getElementById('modal-product-name');
     const productContent = document.getElementById('modal-product-content');
+    
+    if (!modal || !productName || !productContent) return;
     
     productName.textContent = product.name;
     
@@ -263,9 +268,15 @@ function viewProductDetails(productId) {
  */
 function addToCartFromModal(productId) {
     const quantityInput = document.getElementById(`modal-qty-${productId}`);
-    const quantity = parseInt(quantityInput.value) || 1;
-    addToCart(productId, quantity);
-    closeModal();
+    const quantity = parseInt(quantityInput?.value) || 1;
+    
+    if (typeof addToCart === 'function') {
+        addToCart(productId, quantity);
+        closeModal();
+    } else {
+        console.error('❌ addToCart function not found!');
+        showToast('Error adding to cart', 'error');
+    }
 }
 
 /**
@@ -274,11 +285,11 @@ function addToCartFromModal(productId) {
 function increaseQuantity(productId, maxStock) {
     const input = document.getElementById(`qty-${productId}`);
     const modalInput = document.getElementById(`modal-qty-${productId}`);
-    let currentValue = parseInt(input.value) || 1;
+    let currentValue = parseInt(input?.value) || 1;
     
     if (currentValue < maxStock) {
         currentValue++;
-        input.value = currentValue;
+        if (input) input.value = currentValue;
         if (modalInput) modalInput.value = currentValue;
     }
 }
@@ -289,12 +300,28 @@ function increaseQuantity(productId, maxStock) {
 function decreaseQuantity(productId) {
     const input = document.getElementById(`qty-${productId}`);
     const modalInput = document.getElementById(`modal-qty-${productId}`);
-    let currentValue = parseInt(input.value) || 1;
+    let currentValue = parseInt(input?.value) || 1;
     
     if (currentValue > 1) {
         currentValue--;
-        input.value = currentValue;
+        if (input) input.value = currentValue;
         if (modalInput) modalInput.value = currentValue;
+    }
+}
+
+/**
+ * Update cart count from products page
+ */
+function updateCartCountFromProducts() {
+    try {
+        const cart = JSON.parse(localStorage.getItem('bakerist_cart') || '[]');
+        const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+        const cartElement = document.getElementById('cart-count');
+        if (cartElement) {
+            cartElement.textContent = cartCount;
+        }
+    } catch (error) {
+        console.error('Error updating cart count:', error);
     }
 }
 
