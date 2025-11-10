@@ -70,6 +70,7 @@
             <!-- Tracking Header -->
             <div class="tracking-header text-center">
                 <h1>Track Your Order</h1>
+                <p class="tracking-subtitle">Click on any order below to view its current status and tracking information</p>
             </div>
 
             <!-- Order Tracking Result -->
@@ -81,11 +82,23 @@
             <div id="recent-orders-section" class="recent-orders-section logged-in hidden">
                 <div class="section-header">
                     <h2>Your Recent Orders</h2>
-                    <p>Quick access to your order history</p>
+                    <p>Click "Track Order" to view detailed status and tracking information</p>
                 </div>
                 
                 <div id="recent-orders-list" class="recent-orders-list">
                     <!-- Recent orders will be loaded here -->
+                </div>
+            </div>
+
+            <!-- All Orders Section (for admin) -->
+            <div id="all-orders-section" class="all-orders-section admin-only hidden">
+                <div class="section-header">
+                    <h2>All Orders</h2>
+                    <p>Manage and track all customer orders</p>
+                </div>
+                
+                <div id="all-orders-list" class="recent-orders-list">
+                    <!-- All orders will be loaded here -->
                 </div>
             </div>
 
@@ -203,7 +216,6 @@
             </div>
         </div>
     </footer>
-    
     <script src="js/utils.js"></script>
     <script src="js/init.js"></script>
     <script src="js/auth.js"></script>
@@ -221,16 +233,9 @@
                 loadRecentOrdersForTracking();
             }
             
-            // Setup order lookup form
-            const lookupForm = document.getElementById('order-lookup-form');
-            if (lookupForm) {
-                lookupForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const orderNumber = document.getElementById('order-number').value.trim();
-                    if (orderNumber && typeof trackOrder === 'function') {
-                        trackOrder(orderNumber);
-                    }
-                });
+            // Load all orders for admin users
+            if (typeof loadAllOrdersForTracking === 'function') {
+                loadAllOrdersForTracking();
             }
         });
     </script>

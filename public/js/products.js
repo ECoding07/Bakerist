@@ -6,6 +6,62 @@ let currentCategory = 'all';
 let searchTerm = '';
 let sortBy = 'name';
 
+// SVG placeholder as final fallback
+const SVG_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjVlOWQ2Ii8+CjxwYXRoIGQ9Ik04MCA3MEM4MCA2Ny43OTA5IDgxLjc5MDkgNjYgODQgNjZIMTE2QzExOC4yMDkgNjYgMTIwIDY3Ljc5MDkgMTIwIDcwVjExMEMxMjAgMTEyLjIwOSAxMTguMjA5IDExNCAxMTYgMTE0SDg0QzgxLjc5MDkgMTE0IDgwIDExMi4yMDkgODAgMTEwVjcwWiIgZmlsbD0iI2Q2YTg2YiIvPgo8cGF0aCBkPSJNODYgNzRIMTA2Vjk0SDg2Vjc0WiIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTIwIiByPSI4IiBmaWxsPSIjZDZhODZiIi8+Cjwvc3ZnPgo=';
+
+/**
+ * Get correct image path with fallback
+ */
+function getProductImagePath(imagePath) {
+    if (!imagePath) {
+        return SVG_PLACEHOLDER;
+    }
+    
+    // If path already starts with assets/, use it as is
+    if (imagePath.startsWith('assets/')) {
+        return imagePath;
+    }
+    
+    // If path starts with /, remove the leading slash
+    if (imagePath.startsWith('/')) {
+        return imagePath.substring(1);
+    }
+    
+    return imagePath;
+}
+
+/**
+ * Enhanced image error handler
+ */
+function handleImageError(img, category) {
+    console.warn(`⚠️ Image failed to load: ${img.src}`);
+    
+    // Try to fix common path issues
+    let fixedPath = img.src;
+    
+    // If path has double slashes or incorrect base
+    if (fixedPath.includes('//assets/')) {
+        fixedPath = fixedPath.replace('//assets/', 'assets/');
+    }
+    
+    // If path starts with /assets/ from root, try relative
+    if (fixedPath.startsWith(window.location.origin + '/assets/')) {
+        fixedPath = fixedPath.replace(window.location.origin + '/', '');
+    }
+    
+    // If still fails, use SVG placeholder
+    const testImage = new Image();
+    testImage.onload = function() {
+        img.src = fixedPath;
+        console.log(`✅ Fixed image path: ${fixedPath}`);
+    };
+    testImage.onerror = function() {
+        img.src = SVG_PLACEHOLDER;
+        console.log(`❌ Final fallback for: ${img.alt}`);
+    };
+    testImage.src = fixedPath;
+}
+
 /**
  * Initialize menu functionality
  */
@@ -14,7 +70,7 @@ function initializeMenu() {
     loadProducts();
     setupEventListeners();
     displayProducts();
-    updateCartCountFromProducts(); // Ensure cart count is updated
+    updateCartCountFromProducts();
 }
 
 /**
@@ -25,6 +81,13 @@ function loadProducts() {
         products = JSON.parse(localStorage.getItem('bakerist_products') || '[]');
         filteredProducts = [...products];
         console.log(`📦 Loaded ${products.length} products`);
+        
+        // Debug: Log all product image paths
+        products.forEach(product => {
+            const imagePath = getProductImagePath(product.image);
+            console.log(`🖼️ ${product.name}: ${imagePath}`);
+        });
+        
     } catch (error) {
         console.error('Error loading products:', error);
         showToast('Error loading products', 'error');
@@ -142,11 +205,15 @@ function displayProducts() {
     container.style.display = 'grid';
     if (noResults) noResults.classList.add('hidden');
     
-    container.innerHTML = filteredProducts.map(product => `
+    container.innerHTML = filteredProducts.map(product => {
+        const imagePath = getProductImagePath(product.image);
+        console.log(`🖼️ Rendering ${product.name}: ${imagePath}`); // Debug log
+        
+        return `
         <div class="product-card" data-product-id="${product.id}">
             <div class="product-image">
-                <img src="${product.image}" alt="${product.name}" 
-                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlZ2lnaHQ9IjIwMCIgZmlsbD0iI2Y1ZTlkNiIvPgo8cGF0aCBkPSJNODAgNzBDODAgNjcuNzkwOSA4MS43OTA5IDY2IDg0IDY2SDExNkMxMTguMjA5IDY2IDEyMCA2Ny43OTA5IDEyMCA3MFYxMTBDMTIwIDExMi4yMDkgMTE4LjIwOSAxMTQgMTE2IDExNEg4NEM4MS43OTA5IDExNCA4MCAxMTIuMjA5IDgwIDExMFY3MFoiIGZpbGw9IiNkNmE4NmIiLz4KPHBhdGggZD0iTTg2IDc0SDEwNlY5NEg4NlY3NFoiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEyMCIgcj0iOCIgZmlsbD0iI2Q2YTg2YiIvPgo8L3N2Zz4K'">
+                <img src="${imagePath}" alt="${product.name}" 
+                     onerror="handleImageError(this, '${product.category}')">
                 ${product.stock === 0 ? '<span class="stock-badge out-of-stock">Out of Stock</span>' : ''}
                 ${product.stock > 0 && product.stock < 10 ? '<span class="stock-badge low-stock">Low Stock</span>' : ''}
             </div>
@@ -183,7 +250,7 @@ function displayProducts() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 /**
@@ -201,11 +268,13 @@ function viewProductDetails(productId) {
     
     productName.textContent = product.name;
     
+    const imagePath = getProductImagePath(product.image);
+    
     productContent.innerHTML = `
         <div class="product-details-modal">
             <div class="product-details-image">
-                <img src="${product.image}" alt="${product.name}" 
-                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjZjVlOWQ2Ii8+CjxwYXRoIGQ9Ik0xNjAgMTQwQzE2MCAxMzUuNTgyIDE2My41ODIgMTMyIDE2OCAxMzJIMjMyQzIzNi40MTggMTMyIDI0MCAxMzUuNTgyIDI0MCAxNDBWMjIwQzI0MCAyMjQuNDE4IDIzNi40MTggMjI4IDIzMiAyMjhIMTY4QzE2My41ODIgMjI4IDE2MCAyMjQuNDE4IDE2MCAyMjBWMTQwWiIgZmlsbD0iI2Q2YTg2YiIvPgo8cGF0aCBkPSJNMTcyIDE0OEgyMTJWMTg4SDE3MlYxNDhaIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSIyMDAiIGN5PSIyNDAiIHI9IjE2IiBmaWxsPSIjZDZhODZiIi8+Cjwvc3ZnPgo='">
+                <img src="${imagePath}" alt="${product.name}" 
+                     onerror="handleImageError(this, '${product.category}')">
                 ${product.stock === 0 ? '<span class="stock-badge out-of-stock">Out of Stock</span>' : ''}
                 ${product.stock > 0 && product.stock < 10 ? '<span class="stock-badge low-stock">Low Stock</span>' : ''}
             </div>
@@ -325,6 +394,64 @@ function updateCartCountFromProducts() {
     }
 }
 
+/**
+ * Clear all filters
+ */
+function clearFilters() {
+    // Reset search
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) searchInput.value = '';
+    
+    // Reset category filter
+    const categoryFilter = document.getElementById('category-filter');
+    if (categoryFilter) categoryFilter.value = 'all';
+    
+    // Reset sort filter
+    const sortFilter = document.getElementById('sort-filter');
+    if (sortFilter) sortFilter.value = 'name';
+    
+    // Reset category tabs
+    document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.dataset.category === 'all') {
+            tab.classList.add('active');
+        }
+    });
+    
+    // Reset variables
+    searchTerm = '';
+    currentCategory = 'all';
+    sortBy = 'name';
+    
+    // Refresh display
+    filterProducts();
+}
+
+/**
+ * Close modal
+ */
+function closeModal() {
+    const modal = document.getElementById('product-modal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+/**
+ * Debounce function for search
+ */
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // Make functions available globally
 window.viewProductDetails = viewProductDetails;
 window.increaseQuantity = increaseQuantity;
@@ -332,3 +459,5 @@ window.decreaseQuantity = decreaseQuantity;
 window.addToCartFromModal = addToCartFromModal;
 window.closeModal = closeModal;
 window.clearFilters = clearFilters;
+window.handleImageError = handleImageError;
+window.getProductImagePath = getProductImagePath;

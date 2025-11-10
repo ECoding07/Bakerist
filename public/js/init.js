@@ -35,13 +35,12 @@ function seedInitialData() {
     console.log('🌱 Seeding initial data...');
     
     try {
-        // Fetch seed data (in real implementation, this would be from seed.json)
+        // Fetch seed data
         const seedData = getSeedData();
         
-        // Ensure seeded passwords are hashed using simpleHash (seed uses plain-text values)
+        // Ensure seeded passwords are hashed using simpleHash
         const seededUsers = (seedData.users || []).map(u => ({
             ...u,
-            // If the seed provides a plain string in passwordHash, hash it for consistency
             passwordHash: typeof u.passwordHash === 'string' ? simpleHash(u.passwordHash) : (u.passwordHash || '')
         }));
 
@@ -66,7 +65,6 @@ function seedInitialData() {
 
 /**
  * Ensure any existing users stored in localStorage have hashed passwords.
- * This migrates older seed data that stored plain-text passwords.
  */
 function ensureUserPasswordsHashed() {
     try {
@@ -91,11 +89,9 @@ function ensureUserPasswordsHashed() {
 }
 
 /**
- * Get seed data (in real app, this would be fetched from seed.json)
+ * Get seed data with correct image paths
  */
 function getSeedData() {
-    // This data would normally come from seed.json file
-    // For now, we'll include it here and later separate it
     return {
         "users": [
             {
@@ -141,7 +137,7 @@ function getSeedData() {
                 "stock": 120,
                 "available": true,
                 "description": "Soft, warm pandesal baked fresh every morning. Perfect with coffee or hot chocolate.",
-                "image": "/assets/images/pandesal.jpg",
+                "image": "assets/images/pandesal.jpg",
                 "options": null
             },
             {
@@ -152,7 +148,7 @@ function getSeedData() {
                 "stock": 45,
                 "available": true,
                 "description": "Fluffy ensaymada topped with butter, sugar, and grated cheese. A Filipino favorite!",
-                "image": "/assets/images/ensaymada.jpg",
+                "image": "assets/images/ensaymada.jpg",
                 "options": null
             },
             {
@@ -163,7 +159,7 @@ function getSeedData() {
                 "stock": 80,
                 "available": true,
                 "description": "Soft bread rolls filled with sweet butter and breadcrumb mixture.",
-                "image": "/assets/images/spanish-bread.jpg",
+                "image": "assets/images/spanish-bread.jpg",
                 "options": null
             },
             {
@@ -174,7 +170,7 @@ function getSeedData() {
                 "stock": 60,
                 "available": true,
                 "description": "Soft bread filled with sweet coconut filling. A tropical delight!",
-                "image": "/assets/images/pan-de-coco.jpg",
+                "image": "assets/images/pan-de-coco.jpg",
                 "options": null
             },
             {
@@ -185,23 +181,163 @@ function getSeedData() {
                 "stock": 8,
                 "available": true,
                 "description": "Moist purple yam cake with creamy ube frosting. Perfect for celebrations!",
-                "image": "/assets/images/ube-cake.jpg",
+                "image": "assets/images/ube-cake.jpg",
                 "options": {
                     "type": "customization",
                     "choices": ["Add celebrant name", "Add special message"]
                 }
+            },
+            {
+                "id": "prod_006",
+                "name": "Sans Rival",
+                "category": "Cakes",
+                "price": 520.00,
+                "stock": 6,
+                "available": true,
+                "description": "Layered butter cake with cashew meringue and French buttercream.",
+                "image": "assets/images/sans-rival.jpg",
+                "options": null
+            },
+            {
+                "id": "prod_007",
+                "name": "Mango Cake",
+                "category": "Cakes",
+                "price": 480.00,
+                "stock": 5,
+                "available": true,
+                "description": "Light sponge cake with fresh mango slices and whipped cream.",
+                "image": "assets/images/mango-cake.jpg",
+                "options": {
+                    "type": "customization", 
+                    "choices": ["Add celebrant name", "Add special message"]
+                }
+            },
+            {
+                "id": "prod_008",
+                "name": "Chocolate Cupcakes",
+                "category": "Cupcakes",
+                "price": 65.00,
+                "stock": 24,
+                "available": true,
+                "description": "Rich chocolate cupcakes with creamy chocolate frosting and sprinkles.",
+                "image": "assets/images/chocolate-cupcakes.jpg",
+                "options": null
+            },
+            {
+                "id": "prod_009",
+                "name": "Ube Cupcakes",
+                "category": "Cupcakes",
+                "price": 70.00,
+                "stock": 18,
+                "available": true,
+                "description": "Purple yam cupcakes with ube cream cheese frosting.",
+                "image": "assets/images/ube-cupcakes.jpg",
+                "options": null
+            },
+            {
+                "id": "prod_010",
+                "name": "Buko Pandan Cupcakes",
+                "category": "Cupcakes",
+                "price": 68.00,
+                "stock": 15,
+                "available": true,
+                "description": "Pandan-flavored cupcakes with young coconut strips and cream frosting.",
+                "image": "assets/images/buko-pandan-cupcakes.jpg",
+                "options": null
+            },
+            {
+                "id": "prod_011",
+                "name": "Beef Empanada",
+                "category": "Other Favorites",
+                "price": 35.00,
+                "stock": 40,
+                "available": true,
+                "description": "Flaky pastry filled with savory beef, potatoes, and raisins.",
+                "image": "assets/images/beef-empanada.jpg",
+                "options": {
+                    "type": "flavor",
+                    "choices": ["Beef", "Chicken", "Vegetable"]
+                }
+            },
+            {
+                "id": "prod_012",
+                "name": "Hopia",
+                "category": "Other Favorites", 
+                "price": 25.00,
+                "stock": 75,
+                "available": true,
+                "description": "Flaky pastry filled with sweet mung bean paste. Available in different flavors.",
+                "image": "assets/images/hopia.jpg",
+                "options": {
+                    "type": "flavor",
+                    "choices": ["Mongo", "Ube", "Pork"]
+                }
+            },
+            {
+                "id": "prod_013",
+                "name": "Cassava Cake",
+                "category": "Other Favorites",
+                "price": 180.00,
+                "stock": 12,
+                "available": true,
+                "description": "Traditional Filipino cassava cake with creamy coconut topping.",
+                "image": "assets/images/cassava-cake.jpg",
+                "options": null
+            },
+            {
+                "id": "prod_014", 
+                "name": "Puto",
+                "category": "Other Favorites",
+                "price": 5.00,
+                "stock": 200,
+                "available": true,
+                "description": "Soft and fluffy rice cakes. Perfect as snack or with main dishes.",
+                "image": "assets/images/puto.jpg",
+                "options": null
+            },
+            {
+                "id": "prod_015",
+                "name": "Mamon",
+                "category": "Other Favorites", 
+                "price": 18.00,
+                "stock": 90,
+                "available": true,
+                "description": "Light and airy sponge cakes with butter and sugar topping.",
+                "image": "assets/images/mamon.jpg",
+                "options": null
             }
-            // More products would be here in full implementation...
         ],
         "delivery_zones": [
-            {"barangay": "Anilao", "shipping_fee": 30.0},
-            {"barangay": "Bagalangit", "shipping_fee": 25.0},
+            {"barangay": "Anilao", "shipping_fee": 25.0},
+            {"barangay": "Bagalangit", "shipping_fee": 30.0},
+            {"barangay": "Bulacan", "shipping_fee": 20.0},
+            {"barangay": "Calamias", "shipping_fee": 35.0},
+            {"barangay": "Estrella", "shipping_fee": 15.0},
+            {"barangay": "Gasang", "shipping_fee": 40.0},
+            {"barangay": "Laurel", "shipping_fee": 45.0},
+            {"barangay": "Lucena", "shipping_fee": 20.0},
+            {"barangay": "Mainaga", "shipping_fee": 25.0},
             {"barangay": "Mainit", "shipping_fee": 35.0},
-            {"barangay": "Balon-Anito", "shipping_fee": 40.0},
-            {"barangay": "Matabungkay", "shipping_fee": 45.0},
-            {"barangay": "Nag-Iba", "shipping_fee": 50.0},
-            {"barangay": "Laurel", "shipping_fee": 55.0},
-            {"barangay": "Sampaguita", "shipping_fee": 30.0}
+            {"barangay": "Majuben", "shipping_fee": 30.0},
+            {"barangay": "Malimatoc I", "shipping_fee": 20.0},
+            {"barangay": "Malimatoc II", "shipping_fee": 25.0},
+            {"barangay": "Nag-Iba", "shipping_fee": 40.0},
+            {"barangay": "Pilahan", "shipping_fee": 35.0},
+            {"barangay": "Poblacion", "shipping_fee": 10.0},
+            {"barangay": "Pulang Lupa", "shipping_fee": 30.0},
+            {"barangay": "Pulong Balibaguhan", "shipping_fee": 25.0},
+            {"barangay": "Pulong Niogan", "shipping_fee": 20.0},
+            {"barangay": "Saguing", "shipping_fee": 35.0},
+            {"barangay": "Sampaguita", "shipping_fee": 15.0},
+            {"barangay": "San Francisco", "shipping_fee": 25.0},
+            {"barangay": "San Jose", "shipping_fee": 20.0},
+            {"barangay": "San Juan", "shipping_fee": 30.0},
+            {"barangay": "San Teodoro", "shipping_fee": 35.0},
+            {"barangay": "Santa Ana", "shipping_fee": 25.0},
+            {"barangay": "Santa Mesa", "shipping_fee": 20.0},
+            {"barangay": "Santo Niño", "shipping_fee": 30.0},
+            {"barangay": "Santo Tomas", "shipping_fee": 25.0},
+            {"barangay": "Talisay", "shipping_fee": 40.0}
         ],
         "orders": [
             {
@@ -212,8 +348,8 @@ function getSeedData() {
                     {"product_id": "prod_002", "name": "Ensaymada Special", "qty": 4, "price": 25.0, "options": null}
                 ],
                 "subtotal": 196.0,
-                "shipping_fee": 30.0,
-                "total": 226.0,
+                "shipping_fee": 25.0,
+                "total": 221.0,
                 "delivery_info": {
                     "barangay": "Anilao",
                     "sitio": "Sitio Maliksi", 
@@ -225,14 +361,57 @@ function getSeedData() {
                 "payment_method": "GCash",
                 "payment_status": "Paid",
                 "created_at": "2025-01-20T09:15:00Z"
+            },
+            {
+                "id": "ORD-20250122-0002",
+                "user_id": "user_002",
+                "items": [
+                    {"product_id": "prod_005", "name": "Ube Cake", "qty": 1, "price": 450.0, "options": {"celebrantName": "Ana", "message": "Happy Birthday!"}},
+                    {"product_id": "prod_008", "name": "Chocolate Cupcakes", "qty": 6, "price": 65.0, "options": null}
+                ],
+                "subtotal": 840.0,
+                "shipping_fee": 30.0,
+                "total": 870.0,
+                "delivery_info": {
+                    "barangay": "Bagalangit",
+                    "sitio": "Sitio Calmada",
+                    "contact": "+639187654321", 
+                    "full_name": "Maria Santos",
+                    "delivery_method": "Delivery"
+                },
+                "tracking_status": "Out for Delivery",
+                "payment_method": "Credit Card",
+                "payment_status": "Paid",
+                "created_at": "2025-01-22T14:30:00Z"
+            },
+            {
+                "id": "ORD-20250125-0003", 
+                "user_id": "user_001",
+                "items": [
+                    {"product_id": "prod_011", "name": "Beef Empanada", "qty": 10, "price": 35.0, "options": {"flavor": "Beef"}},
+                    {"product_id": "prod_012", "name": "Hopia", "qty": 12, "price": 25.0, "options": {"flavor": "Ube"}}
+                ],
+                "subtotal": 470.0,
+                "shipping_fee": 25.0,
+                "total": 495.0,
+                "delivery_info": {
+                    "barangay": "Anilao", 
+                    "sitio": "Sitio Maliksi",
+                    "contact": "+639171234567",
+                    "full_name": "Juan dela Cruz",
+                    "delivery_method": "Pickup"
+                },
+                "tracking_status": "To Prepare",
+                "payment_method": "COD",
+                "payment_status": "Pending",
+                "created_at": "2025-01-25T11:45:00Z"
             }
-            // More orders would be here...
         ],
         "settings": {
             "nextOrderNumber": 4,
             "store_name": "BAKERIST — Mabini Bakery",
-            "contact_number": "+63 912 345 6789",
-            "operating_hours": "6:00 AM - 8:00 PM Daily",
+            "contact_number": "+63 909 612 1428",
+            "operating_hours": "6:00 AM - 5:00 PM Daily",
             "address": "Mabini, Batangas, Philippines"
         }
     };
@@ -299,6 +478,12 @@ function initializePageSpecificFeatures() {
             }
             initializeAdminPage();
             break;
+        case 'profile':
+            initializeProfilePage();
+            break;
+        case 'tracking':
+            initializeTrackingPage();
+            break;
         // Add more cases for other pages
     }
 }
@@ -312,6 +497,12 @@ function initializeHomePage() {
     
     // Initialize hero animations
     initializeHeroAnimations();
+    
+    // Load user-specific content if logged in
+    const user = getCurrentUser();
+    if (user) {
+        loadUserHomeContent(user);
+    }
 }
 
 /**
@@ -324,10 +515,13 @@ function loadFeaturedProducts() {
     const products = JSON.parse(localStorage.getItem('bakerist_products') || '[]');
     const featuredProducts = products.slice(0, 6); // First 6 products as featured
     
-    featuredContainer.innerHTML = featuredProducts.map(product => `
+    featuredContainer.innerHTML = featuredProducts.map(product => {
+        const imagePath = getProductImagePath(product.image);
+        return `
         <div class="product-card">
             <div class="product-image">
-                <img src="${product.image}" alt="${product.name}" onerror="this.src='/assets/images/placeholder.jpg'">
+                <img src="${imagePath}" alt="${product.name}" 
+                     onerror="handleImageError(this, '${product.category}')">
                 ${product.stock < 10 ? '<span class="stock-badge low-stock">Low Stock</span>' : ''}
             </div>
             <div class="product-info">
@@ -339,6 +533,63 @@ function loadFeaturedProducts() {
                 </button>
             </div>
         </div>
+    `}).join('');
+}
+
+/**
+ * Load user-specific content for home page
+ */
+function loadUserHomeContent(user) {
+    // Update welcome message
+    const welcomeMessage = document.getElementById('welcome-message');
+    if (welcomeMessage) {
+        welcomeMessage.textContent = `Welcome Back, ${user.name.split(' ')[0]}!`;
+    }
+    
+    // Load recent orders
+    loadRecentOrdersHome();
+}
+
+/**
+ * Load recent orders for home page
+ */
+function loadRecentOrdersHome() {
+    const user = getCurrentUser();
+    const container = document.getElementById('recent-orders-home');
+    
+    if (!user || !container) return;
+    
+    const orders = getUserOrderHistory(user.id).slice(0, 3);
+    
+    if (orders.length === 0) {
+        container.innerHTML = `
+            <div class="no-orders-message">
+                <span class="icon">📦</span>
+                <h4>No orders yet</h4>
+                <p>You haven't placed any orders with Bakerist.</p>
+                <a href="menu.html" class="btn btn-primary mt-3">Start Shopping</a>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = orders.map(order => `
+        <div class="order-preview-card">
+            <div class="order-preview-info">
+                <div class="order-preview-id">${order.id}</div>
+                <div class="order-preview-date">${formatDisplayDate(order.created_at)}</div>
+                <div class="order-preview-items">
+                    ${order.items.slice(0, 2).map(item => `${item.name} (${item.qty})`).join(', ')}
+                    ${order.items.length > 2 ? ` and ${order.items.length - 2} more items` : ''}
+                </div>
+            </div>
+            <div class="order-preview-meta">
+                <div class="order-preview-total">${formatCurrency(order.total)}</div>
+                <div class="order-preview-status status-${order.tracking_status.toLowerCase().replace(' ', '-')}">
+                    ${order.tracking_status}
+                </div>
+            </div>
+        </div>
     `).join('');
 }
 
@@ -347,10 +598,45 @@ function loadFeaturedProducts() {
  */
 function initializeHeroAnimations() {
     // Add floating pastry animations
-    const hero = document.querySelector('.hero');
-    if (hero) {
-        // This would create floating pastry elements
-        // Implementation depends on specific design requirements
+    const pastries = document.querySelectorAll('.pastry');
+    pastries.forEach((pastry, index) => {
+        pastry.style.animation = `float ${3 + index * 0.5}s ease-in-out infinite alternate`;
+    });
+}
+
+/**
+ * Initialize menu page
+ */
+function initializeMenuPage() {
+    if (typeof initializeMenu === 'function') {
+        initializeMenu();
+    }
+}
+
+/**
+ * Initialize admin page
+ */
+function initializeAdminPage() {
+    if (typeof initializeAdmin === 'function') {
+        initializeAdmin();
+    }
+}
+
+/**
+ * Initialize profile page
+ */
+function initializeProfilePage() {
+    if (typeof initializeProfile === 'function') {
+        initializeProfile();
+    }
+}
+
+/**
+ * Initialize tracking page
+ */
+function initializeTrackingPage() {
+    if (typeof initializeTracking === 'function') {
+        initializeTracking();
     }
 }
 

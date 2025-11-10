@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - BAKERIST Mabini Bakery</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 404 Page Specific Styles */
+        .error-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-beige) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .error-container {
+            text-align: center;
+            background: var(--white);
+            padding: var(--space-2xl);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            max-width: 500px;
+            margin: var(--space-xl);
+            position: relative;
+            z-index: 2;
+            border: 2px solid var(--primary-brown);
+        }
+
+        .error-emoji {
+            font-size: 4rem;
+            margin-bottom: var(--space-lg);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .error-code {
+            font-size: 6rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            margin-bottom: var(--space-sm);
+            line-height: 1;
+            font-family: var(--font-heading);
+        }
+
+        .error-title {
+            font-size: 1.8rem;
+            color: var(--accent-dark);
+            margin-bottom: var(--space-md);
+            font-weight: 600;
+        }
+
+        .error-message {
+            font-size: 1.2rem;
+            color: var(--gray-medium);
+            margin-bottom: var(--space-xl);
+            line-height: 1.6;
+        }
+
+        .error-message strong {
+            color: var(--primary-brown);
+            font-weight: 600;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--space-xl);
+        }
+
+        .baking-tip {
+            background: var(--primary-light);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            border-left: 4px solid var(--primary-brown);
+            margin-top: var(--space-lg);
+        }
+
+        .baking-tip h4 {
+            color: var(--accent-dark);
+            margin-bottom: var(--space-sm);
+            font-size: 1.1rem;
+        }
+
+        .baking-tip p {
+            color: var(--gray-medium);
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Floating bakery items */
+        .floating-items {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-item {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.7;
+            animation: float-around 8s ease-in-out infinite;
+        }
+
+        .item-1 { top: 20%; left: 10%; animation-delay: 0s; }
+        .item-2 { top: 70%; right: 15%; animation-delay: 1s; }
+        .item-3 { bottom: 30%; left: 20%; animation-delay: 2s; }
+        .item-4 { top: 40%; right: 25%; animation-delay: 3s; }
+        .item-5 { top: 80%; left: 80%; animation-delay: 4s; }
+        .item-6 { top: 25%; left: 75%; animation-delay: 5s; }
+
+        /* Animations */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes float-around {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(20px, -20px) rotate(5deg);
+            }
+            50% {
+                transform: translate(-15px, 15px) rotate(-5deg);
+            }
+            75% {
+                transform: translate(10px, -10px) rotate(3deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .error-container {
+                padding: var(--space-xl);
+                margin: var(--space-lg);
+            }
+
+            .error-code {
+                font-size: 4rem;
+            }
+
+            .error-title {
+                font-size: 1.5rem;
+            }
+
+            .error-message {
+                font-size: 1.1rem;
+            }
+
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .error-actions .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-container {
+                padding: var(--space-lg);
+            }
+
+            .error-code {
+                font-size: 3rem;
+            }
+
+            .error-title {
+                font-size: 1.3rem;
+            }
+
+            .error-message {
+                font-size: 1rem;
+            }
+
+            .floating-item {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- 404 Error Content -->
+    <main class="error-page">
+        <!-- Floating Bakery Items -->
+        <div class="floating-items">
+            <div class="floating-item item-1">🥖</div>
+            <div class="floating-item item-2">🥐</div>
+            <div class="floating-item item-3">🍞</div>
+            <div class="floating-item item-4">🥨</div>
+            <div class="floating-item item-5">🍰</div>
+            <div class="floating-item item-6">🧁</div>
+        </div>
+
+        <div class="error-container">
+            <div class="error-emoji">🍞</div>
+            <h1 class="error-code">404</h1>
+            <h2 class="error-title">Oops! Page Not Found</h2>
+            <p class="error-message">
+                <strong>"Wala pa po, wait lang sa future updates!"</strong><br>
+                This page is still in the oven and needs more time to bake to perfection.
+            </p>
+            
+            <div class="error-actions">
+                <a href="index.html" class="btn btn-primary">🏠 Go Home</a>
+                <a href="menu.html" class="btn btn-secondary">🍰 View Menu</a>
+            </div>
+
+            <div class="baking-tip">
+                <h4>📝 Baking Tip While You Wait:</h4>
+                <p>Good bread needs time to rise! Just like our website features, the best things come to those who wait. In the meantime, why not check out our freshly baked menu items?</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Simple script for mobile menu (reuse from your main.js if available)
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (hamburger) {
+                hamburger.addEventListener('click', function() {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+            }
+            
+            // Update cart count
+            function updateCartCount() {
+                const cart = JSON.parse(localStorage.getItem('bakerist_cart') || '[]');
+                const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+                const cartElement = document.getElementById('cart-count');
+                if (cartElement) {
+                    cartElement.textContent = cartCount;
+                }
+            }
+            
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>

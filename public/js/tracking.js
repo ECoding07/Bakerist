@@ -5,7 +5,7 @@
  */
 function trackOrder(orderNumber) {
     if (!orderNumber) {
-        showToast('Please enter an order number', 'error');
+        showToast('Please select an order to track', 'error');
         return;
     }
 
@@ -30,7 +30,7 @@ function trackOrder(orderNumber) {
                         <li>✅ The order was placed within the last 30 days</li>
                     </ul>
                 </div>
-                <button class="btn btn-primary" onclick="clearLookupForm()">Try Another Order Number</button>
+                <button class="btn btn-primary" onclick="clearTrackingResult()">Try Another Order</button>
             </div>
         `;
         resultContainer.classList.remove('hidden');
@@ -40,6 +40,9 @@ function trackOrder(orderNumber) {
     // Display order tracking information
     displayOrderTracking(order);
     resultContainer.classList.remove('hidden');
+    
+    // Scroll to tracking result
+    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 /**
@@ -168,8 +171,13 @@ function displayOrderTracking(order) {
                         </button>
                     `}
                 ` : ''}
+                ${isAdmin() && order.tracking_status !== 'Delivered' ? `
+                    <button class="btn btn-warning" onclick="updateOrderStatus('${order.id}')">
+                        ⚡ Update to Next Status
+                    </button>
+                ` : ''}
                 <button class="btn btn-secondary" onclick="clearTrackingResult()">
-                    Track Another Order
+                    View Other Orders
                 </button>
             </div>
         </div>
@@ -177,54 +185,87 @@ function displayOrderTracking(order) {
 }
 
 /**
- * Get status steps for tracking timeline
+ * Get status steps for tracking timeline - FIXED VERSION
  */
 function getStatusSteps(currentStatus) {
     const allSteps = [
         {
-            status: 'completed',
             title: 'Order Placed',
-            description: 'Your order has been received',
-            icon: '📝'
+            description: 'Your order has been received and confirmed',
+            icon: '📝',
+            statusKey: 'order_placed'
         },
         {
-            status: 'completed',
             title: 'Payment Confirmed',
-            description: 'Payment has been processed',
-            icon: '💰'
+            description: 'Payment has been processed successfully',
+            icon: '💰',
+            statusKey: 'payment_confirmed'
         },
         {
-            status: 'current',
             title: 'Preparing Order',
             description: 'Our bakers are preparing your items',
-            icon: '👨‍🍳'
+            icon: '👨‍🍳',
+            statusKey: 'preparing'
         },
         {
-            status: 'pending',
             title: 'Out for Delivery',
-            description: 'Your order is on the way',
-            icon: '🚚'
+            description: 'Your order is on the way to you',
+            icon: '🚚',
+            statusKey: 'out_for_delivery'
         },
         {
-            status: 'pending',
             title: 'Delivered',
-            description: 'Order has been delivered',
-            icon: '✅'
+            description: 'Order has been successfully delivered',
+            icon: '✅',
+            statusKey: 'delivered'
         }
     ];
     
-    const statusOrder = ['To Pay', 'To Prepare', 'Out for Delivery', 'Delivered'];
-    const currentIndex = statusOrder.indexOf(currentStatus);
+    // Map order status to step completion
+    const statusMapping = {
+        'To Pay': { completed: 0, current: 0 }, // Only order placed is done
+        'To Prepare': { completed: 2, current: 2 }, // Order placed + payment confirmed + preparing
+        'Out for Delivery': { completed: 3, current: 3 }, // All steps up to out for delivery
+        'Delivered': { completed: 4, current: 4 } // All steps completed
+    };
     
-    // Update step statuses based on current order status
+    const mapping = statusMapping[currentStatus] || { completed: 0, current: 0 };
+    
     return allSteps.map((step, index) => {
-        if (index <= currentIndex + 1) {
-            return { ...step, status: 'completed' };
-        } else if (index === currentIndex + 2) {
-            return { ...step, status: 'current' };
+        if (index < mapping.completed) {
+            return { ...step, status: 'completed', time: getStatusTime(step.statusKey, true) };
+        } else if (index === mapping.current) {
+            return { ...step, status: 'current', time: getStatusTime(step.statusKey, false) };
         } else {
-            return { ...step, status: 'pending' };
+            return { ...step, status: 'pending', time: '' };
         }
+    });
+}
+
+/**
+ * Get realistic timestamps for status updates
+ */
+function getStatusTime(statusKey, isCompleted) {
+    const now = new Date();
+    const times = {
+        'order_placed': isCompleted ? `${formatTime(new Date(now - 2 * 60 * 60 * 1000))} - Order confirmed` : 'In progress',
+        'payment_confirmed': isCompleted ? `${formatTime(new Date(now - 90 * 60 * 1000))} - Payment verified` : 'Verifying payment',
+        'preparing': isCompleted ? `${formatTime(new Date(now - 45 * 60 * 1000))} - Baking completed` : 'Currently baking',
+        'out_for_delivery': isCompleted ? `${formatTime(new Date(now - 15 * 60 * 1000))} - On the road` : 'Preparing for dispatch',
+        'delivered': isCompleted ? `${formatTime(now)} - Delivery successful` : 'Estimated delivery soon'
+    };
+    
+    return times[statusKey] || '';
+}
+
+/**
+ * Format time for display
+ */
+function formatTime(date) {
+    return date.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
     });
 }
 
@@ -238,7 +279,7 @@ function loadRecentOrdersForTracking() {
     
     if (!user || !recentSection || !ordersList) return;
     
-    const orders = getUserOrderHistory(user.id).slice(0, 5); // Last 5 orders
+    const orders = getUserOrderHistory(user.id).slice(0, 10); // Last 10 orders
     
     if (orders.length === 0) {
         ordersList.innerHTML = `
@@ -251,6 +292,9 @@ function loadRecentOrdersForTracking() {
         `;
         return;
     }
+    
+    // Sort orders by date (newest first)
+    orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     
     ordersList.innerHTML = orders.map(order => `
         <div class="recent-order-card">
@@ -268,7 +312,7 @@ function loadRecentOrdersForTracking() {
                 <div class="order-status status-${order.tracking_status.toLowerCase().replace(' ', '-')}">
                     ${order.tracking_status}
                 </div>
-                <button class="btn btn-sm btn-outline" onclick="trackOrder('${order.id}')">
+                <button class="btn btn-sm btn-primary" onclick="trackOrder('${order.id}')">
                     Track Order
                 </button>
             </div>
@@ -279,14 +323,61 @@ function loadRecentOrdersForTracking() {
 }
 
 /**
- * Clear lookup form
+ * Load all orders for admin users
  */
-function clearLookupForm() {
-    const form = document.getElementById('order-lookup-form');
-    const result = document.getElementById('tracking-result');
+function loadAllOrdersForTracking() {
+    const user = getCurrentUser();
+    const allSection = document.getElementById('all-orders-section');
+    const ordersList = document.getElementById('all-orders-list');
     
-    if (form) form.reset();
-    if (result) result.classList.add('hidden');
+    if (!user || !isAdmin() || !allSection || !ordersList) return;
+    
+    const orders = JSON.parse(localStorage.getItem('bakerist_orders') || '[]');
+    
+    if (orders.length === 0) {
+        ordersList.innerHTML = `
+            <div class="no-orders-message">
+                <div class="no-orders-icon">📦</div>
+                <h4>No orders found</h4>
+                <p>There are no orders in the system yet.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Sort orders by date (newest first)
+    orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    
+    ordersList.innerHTML = orders.map(order => `
+        <div class="recent-order-card">
+            <div class="recent-order-info">
+                <div class="order-number">
+                    <strong>${order.id}</strong>
+                    <span class="order-date">${formatDisplayDate(order.created_at)}</span>
+                </div>
+                <div class="order-summary">
+                    <strong>Customer:</strong> ${order.delivery_info.full_name} |
+                    ${order.items.slice(0, 2).map(item => `${item.name} (${item.qty})`).join(', ')}
+                    ${order.items.length > 2 ? ` and ${order.items.length - 2} more items` : ''}
+                </div>
+            </div>
+            <div class="recent-order-actions">
+                <div class="order-status status-${order.tracking_status.toLowerCase().replace(' ', '-')}">
+                    ${order.tracking_status}
+                </div>
+                <button class="btn btn-sm btn-primary" onclick="trackOrder('${order.id}')">
+                    Track Order
+                </button>
+                ${isAdmin() && order.tracking_status !== 'Delivered' ? `
+                    <button class="btn btn-sm btn-warning" onclick="updateOrderStatus('${order.id}')">
+                        Update Status
+                    </button>
+                ` : ''}
+            </div>
+        </div>
+    `).join('');
+    
+    allSection.classList.remove('hidden');
 }
 
 /**
@@ -294,10 +385,13 @@ function clearLookupForm() {
  */
 function clearTrackingResult() {
     const result = document.getElementById('tracking-result');
-    const form = document.getElementById('order-lookup-form');
-    
-    if (result) result.classList.add('hidden');
-    if (form) form.reset();
+    if (result) {
+        result.classList.add('hidden');
+        result.innerHTML = '';
+        
+        // Scroll back to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 
 /**
@@ -390,6 +484,9 @@ function printOrderReceipt(orderId) {
 function contactAboutOrder(orderId) {
     showToast(`Contacting support about order ${orderId}...`, 'info');
     // In a real implementation, this would open a contact form or chat
+    setTimeout(() => {
+        window.location.href = `contact.html?order=${orderId}`;
+    }, 1000);
 }
 
 /**
@@ -419,11 +516,65 @@ function reorderItems(orderId) {
     }, 1500);
 }
 
+/**
+ * Update order status (admin only)
+ */
+function updateOrderStatus(orderId) {
+    if (!isAdmin()) {
+        showToast('Access denied. Admin privileges required.', 'error');
+        return;
+    }
+    
+    const orders = JSON.parse(localStorage.getItem('bakerist_orders') || '[]');
+    const order = orders.find(o => o.id === orderId);
+    
+    if (!order) {
+        showToast('Order not found', 'error');
+        return;
+    }
+    
+    const statuses = ['To Pay', 'To Prepare', 'Out for Delivery', 'Delivered'];
+    const currentIndex = statuses.indexOf(order.tracking_status);
+    
+    if (currentIndex === -1 || currentIndex === statuses.length - 1) {
+        showToast('Order is already delivered or has invalid status', 'info');
+        return;
+    }
+    
+    const nextStatus = statuses[currentIndex + 1];
+    
+    // Update order status
+    order.tracking_status = nextStatus;
+    
+    // Update payment status if moving from "To Pay"
+    if (order.tracking_status === 'To Prepare' && order.payment_status === 'Pending') {
+        order.payment_status = 'Paid';
+    }
+    
+    // Save updated orders
+    localStorage.setItem('bakerist_orders', JSON.stringify(orders));
+    
+    showToast(`Order ${orderId} status updated to: ${nextStatus}`, 'success');
+    
+    // Reload the orders list and tracking display
+    setTimeout(() => {
+        loadRecentOrdersForTracking();
+        loadAllOrdersForTracking();
+        
+        // If this order is currently being tracked, update the display
+        const currentTracking = document.getElementById('tracking-result');
+        if (!currentTracking.classList.contains('hidden')) {
+            displayOrderTracking(order);
+        }
+    }, 500);
+}
+
 // Make functions available globally
 window.trackOrder = trackOrder;
-window.clearLookupForm = clearLookupForm;
 window.clearTrackingResult = clearTrackingResult;
 window.printOrderReceipt = printOrderReceipt;
 window.contactAboutOrder = contactAboutOrder;
 window.reorderItems = reorderItems;
+window.updateOrderStatus = updateOrderStatus;
 window.loadRecentOrdersForTracking = loadRecentOrdersForTracking;
+window.loadAllOrdersForTracking = loadAllOrdersForTracking;
