@@ -595,3 +595,327 @@
         flex-direction: column;
     }
 }
+
+/* ===== ADMIN INVENTORY TABLE STYLES ===== */
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.inventory-table th {
+    background: var(--primary-light);
+    padding: var(--space-md);
+    text-align: left;
+    font-weight: 600;
+    color: var(--accent-dark);
+    border-bottom: 2px solid var(--primary-beige);
+}
+
+.inventory-table td {
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--primary-beige);
+    vertical-align: middle;
+}
+
+.inventory-table tr:last-child td {
+    border-bottom: none;
+}
+
+.inventory-table tr:hover {
+    background: var(--primary-light);
+}
+
+/* Product info cell with image */
+.product-info-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    min-width: 200px;
+}
+
+.product-thumbnail {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+    border: 2px solid var(--primary-beige);
+    flex-shrink: 0;
+}
+
+.product-text-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.product-text-info strong {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--accent-dark);
+    margin-bottom: 2px;
+}
+
+.product-description-truncated {
+    font-size: 0.8rem;
+    color: var(--gray-medium);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+/* Category badges */
+.category-badge {
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.category-breads {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.category-cakes {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.category-cupcakes {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.category-other-favorites {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* Stock display */
+.stock-display {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.stock-number {
+    font-weight: 700;
+    font-size: 1rem;
+    min-width: 30px;
+    text-align: center;
+}
+
+.stock-number.out-of-stock {
+    color: var(--error);
+}
+
+.stock-number.low-stock {
+    color: var(--warning);
+}
+
+.stock-number.medium-stock {
+    color: var(--primary-brown);
+}
+
+.stock-input {
+    width: 60px;
+    padding: var(--space-xs);
+    border: 1px solid var(--gray-medium);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+/* Stock status */
+.stock-status {
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.stock-status.out-of-stock {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.stock-status.low-stock {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.stock-status.medium-stock {
+    background: #ffeaa7;
+    color: #6c5ce7;
+}
+
+.stock-status.in-stock {
+    background: #d1edf1;
+    color: #0c5460;
+}
+
+/* Price display */
+.price-display {
+    font-weight: 700;
+    color: var(--primary-brown);
+    font-size: 0.9rem;
+}
+
+/* Inventory actions */
+.inventory-actions-cell {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.inventory-actions-cell .btn {
+    padding: var(--space-xs);
+    min-width: auto;
+    font-size: 0.8rem;
+}
+
+/* Row states */
+.out-of-stock-row {
+    background: #f8d7da !important;
+}
+
+.low-stock-row {
+    background: #fff3cd !important;
+}
+
+/* Table responsive */
+.table-responsive {
+    overflow-x: auto;
+    border-radius: var(--radius-lg);
+}
+
+/* Inventory summary cards */
+.inventory-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.inventory-card {
+    background: var(--white);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid transparent;
+}
+
+.inventory-card.critical {
+    border-left-color: var(--error);
+}
+
+.inventory-card.warning {
+    border-left-color: var(--warning);
+}
+
+.inventory-card.info {
+    border-left-color: var(--info);
+}
+
+.inventory-card .count {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: var(--space-sm) 0;
+}
+
+.inventory-card.critical .count {
+    color: var(--error);
+}
+
+.inventory-card.warning .count {
+    color: var(--warning);
+}
+
+.inventory-card.info .count {
+    color: var(--info);
+}
+
+.inventory-card h4 {
+    font-size: 0.9rem;
+    color: var(--gray-medium);
+    margin: 0;
+}
+
+/* Inventory actions section */
+.inventory-actions {
+    background: var(--white);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.inventory-actions h3 {
+    margin-bottom: var(--space-md);
+    color: var(--accent-dark);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .product-info-cell {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+    }
+    
+    .product-thumbnail {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .product-text-info strong {
+        font-size: 0.85rem;
+    }
+    
+    .product-description-truncated {
+        max-width: 120px;
+    }
+    
+    .inventory-actions-cell {
+        flex-direction: column;
+    }
+    
+    .inventory-actions-cell .btn {
+        font-size: 0.75rem;
+        padding: var(--space-xs);
+    }
+    
+    .stock-display {
+        flex-direction: column;
+        gap: var(--space-xs);
+    }
+    
+    .stock-input {
+        width: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventory-table th,
+    .inventory-table td {
+        padding: var(--space-sm);
+    }
+    
+    .product-info-cell {
+        min-width: 150px;
+    }
+    
+    .product-description-truncated {
+        max-width: 100px;
+    }
+}

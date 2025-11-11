@@ -15,6 +15,62 @@ let adminState = {
     }
 };
 
+// SVG placeholder for product images
+const SVG_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjVlOWQ2Ii8+CjxwYXRoIGQ9Ik04MCA3MEM4MCA2Ny43OTA5IDgxLjc5MDkgNjYgODQgNjZIMTE2QzExOC4yMDkgNjYgMTIwIDY3Ljc5MDkgMTIwIDcwVjExMEMxMjAgMTEyLjIwOSAxMTguMjA5IDExNCAxMTYgMTE0SDg0QzgxLjc5MDkgMTE0IDgwIDExMi4yMDkgODAgMTEwVjcwWiIgZmlsbD0iI2Q2YTg2YiIvPgo8cGF0aCBkPSJNODYgNzRIMTA2Vjk0SDg2Vjc0WiIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTIwIiByPSI4IiBmaWxsPSIjZDZhODZiIi8+Cjwvc3ZnPgo=';
+
+/**
+ * Get correct image path with fallback
+ */
+function getProductImagePath(imagePath) {
+    if (!imagePath) {
+        return SVG_PLACEHOLDER;
+    }
+    
+    // If path already starts with assets/, use it as is
+    if (imagePath.startsWith('assets/')) {
+        return imagePath;
+    }
+    
+    // If path starts with /, remove the leading slash
+    if (imagePath.startsWith('/')) {
+        return imagePath.substring(1);
+    }
+    
+    return imagePath;
+}
+
+/**
+ * Enhanced image error handler for admin
+ */
+function handleAdminImageError(img, productName) {
+    console.warn(`⚠️ Admin image failed to load: ${img.src}`);
+    
+    // Try to fix common path issues
+    let fixedPath = img.src;
+    
+    // If path has double slashes or incorrect base
+    if (fixedPath.includes('//assets/')) {
+        fixedPath = fixedPath.replace('//assets/', 'assets/');
+    }
+    
+    // If path starts with /assets/ from root, try relative
+    if (fixedPath.startsWith(window.location.origin + '/assets/')) {
+        fixedPath = fixedPath.replace(window.location.origin + '/', '');
+    }
+    
+    // If still fails, use SVG placeholder
+    const testImage = new Image();
+    testImage.onload = function() {
+        img.src = fixedPath;
+        console.log(`✅ Fixed admin image path: ${fixedPath}`);
+    };
+    testImage.onerror = function() {
+        img.src = SVG_PLACEHOLDER;
+        console.log(`❌ Admin fallback for: ${productName}`);
+    };
+    testImage.src = fixedPath;
+}
+
 /**
  * Initialize admin dashboard
  */
@@ -442,8 +498,26 @@ function viewOrderDetails(orderId) {
     const order = adminState.orders.find(o => o.id === orderId);
     if (!order) return;
 
-    const modal = document.getElementById('order-details-modal');
-    const modalContent = modal.querySelector('.modal-body');
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('order-details-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'order-details-modal';
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Order Details</h3>
+                    <button class="modal-close" onclick="closeModal('order-details-modal')">&times;</button>
+                </div>
+                <div class="modal-body" id="order-details-content">
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    const modalContent = document.getElementById('order-details-content');
     
     modalContent.innerHTML = `
         <div class="order-details-modal">
@@ -472,13 +546,25 @@ function viewOrderDetails(orderId) {
                     <div class="detail-item">
                         <strong>Delivery Method:</strong> ${order.delivery_info.delivery_method}
                     </div>
+                    ${order.delivery_info.instructions ? `
+                        <div class="detail-item">
+                            <strong>Instructions:</strong> ${order.delivery_info.instructions}
+                        </div>
+                    ` : ''}
                 </div>
 
                 <div class="detail-section">
                     <h4>Order Summary</h4>
                     <div class="order-items-detailed">
-                        ${order.items.map(item => `
+                        ${order.items.map(item => {
+                            const product = adminState.products.find(p => p.id === item.product_id);
+                            const imagePath = product ? getProductImagePath(product.image) : SVG_PLACEHOLDER;
+                            return `
                             <div class="order-item-detailed">
+                                <div class="item-image">
+                                    <img src="${imagePath}" alt="${item.name}" 
+                                         onerror="handleAdminImageError(this, '${item.name}')">
+                                </div>
                                 <div class="item-info">
                                     <strong>${item.name}</strong>
                                     <div class="item-options">
@@ -490,7 +576,7 @@ function viewOrderDetails(orderId) {
                                 <div class="item-quantity">${item.qty} × ${formatCurrency(item.price)}</div>
                                 <div class="item-total">${formatCurrency(item.qty * item.price)}</div>
                             </div>
-                        `).join('')}
+                        `}).join('')}
                     </div>
                     
                     <div class="order-totals">
@@ -551,15 +637,17 @@ function loadProductsView() {
                 <button class="btn btn-primary" onclick="showAddProductForm()">
                     Add New Product
                 </button>
-                
             ` : ''}
         </div>
 
         <div class="products-grid-admin">
-            ${adminState.products.map(product => `
+            ${adminState.products.map(product => {
+                const imagePath = getProductImagePath(product.image);
+                return `
                 <div class="product-card-admin">
                     <div class="product-image">
-                        <img src="${product.image}" alt="${product.name}" onerror="this.src='/assets/images/placeholder.jpg'">
+                        <img src="${imagePath}" alt="${product.name}" 
+                             onerror="handleAdminImageError(this, '${product.name}')">
                         <div class="product-badges">
                             ${!product.available ? '<span class="badge out-of-stock">Disabled</span>' : ''}
                             ${product.stock < 5 ? '<span class="badge low-stock">Low Stock</span>' : ''}
@@ -598,38 +686,117 @@ function loadProductsView() {
                         </div>
                     </div>
                 </div>
-            `).join('')}
+            `}).join('')}
         </div>
     `;
 }
 
 /**
- * Edit product
+ * Enhanced product editing
  */
 function editProduct(productId) {
     const product = adminState.products.find(p => p.id === productId);
     if (!product) return;
 
-    // For now, show a simple edit form
-    const newPrice = prompt('Enter new price:', product.price);
-    if (newPrice && !isNaN(newPrice)) {
-        updateProductPrice(productId, parseFloat(newPrice));
-    }
+    // Create a more comprehensive edit form
+    const modal = document.createElement('div');
+    modal.id = 'edit-product-modal';
+    modal.className = 'modal';
+    
+    const imagePath = getProductImagePath(product.image);
+    
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Product: ${product.name}</h3>
+                <button class="modal-close" onclick="closeModal('edit-product-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="edit-product-form">
+                    <div class="form-group">
+                        <label class="form-label">Product Image</label>
+                        <div class="product-image-preview">
+                            <img src="${imagePath}" alt="${product.name}" 
+                                 onerror="handleAdminImageError(this, '${product.name}')">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="edit-product-name" value="${product.name}">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Price (₱)</label>
+                            <input type="number" class="form-control" id="edit-product-price" value="${product.price}" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="edit-product-stock" value="${product.stock}" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-control" id="edit-product-category">
+                            <option value="Breads" ${product.category === 'Breads' ? 'selected' : ''}>Breads</option>
+                            <option value="Cakes" ${product.category === 'Cakes' ? 'selected' : ''}>Cakes</option>
+                            <option value="Cupcakes" ${product.category === 'Cupcakes' ? 'selected' : ''}>Cupcakes</option>
+                            <option value="Other Favorites" ${product.category === 'Other Favorites' ? 'selected' : ''}>Other Favorites</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" id="edit-product-description" rows="3">${product.description}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="edit-product-available" ${product.available ? 'checked' : ''}>
+                            <span>Product is available for sale</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="saveProductChanges('${productId}')">
+                        Save Changes
+                    </button>
+                    <button class="btn btn-outline" onclick="closeModal('edit-product-modal')">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    modal.classList.add('show');
 }
 
 /**
- * Update product price
+ * Save product changes
  */
-function updateProductPrice(productId, newPrice) {
+function saveProductChanges(productId) {
     const products = JSON.parse(localStorage.getItem('bakerist_products') || '[]');
     const productIndex = products.findIndex(p => p.id === productId);
     
     if (productIndex !== -1) {
-        products[productIndex].price = newPrice;
+        products[productIndex].name = document.getElementById('edit-product-name').value;
+        products[productIndex].price = parseFloat(document.getElementById('edit-product-price').value);
+        products[productIndex].stock = parseInt(document.getElementById('edit-product-stock').value);
+        products[productIndex].category = document.getElementById('edit-product-category').value;
+        products[productIndex].description = document.getElementById('edit-product-description').value;
+        products[productIndex].available = document.getElementById('edit-product-available').checked;
+        
         localStorage.setItem('bakerist_products', JSON.stringify(products));
         loadAdminData();
         loadProductsView();
-        showToast('Product price updated successfully', 'success');
+        closeModal('edit-product-modal');
+        showToast('Product updated successfully', 'success');
     }
 }
 
@@ -712,10 +879,17 @@ function loadInventoryView() {
                         </tr>
                     </thead>
                     <tbody>
-                        ${adminState.products.map(product => `
+                        ${adminState.products.map(product => {
+                            const imagePath = getProductImagePath(product.image);
+                            return `
                             <tr class="${product.stock === 0 ? 'out-of-stock-row' : product.stock < 5 ? 'low-stock-row' : ''}">
                                 <td>
-                                    <strong>${product.name}</strong>
+                                    <div class="product-info-cell">
+                                        <img src="${imagePath}" alt="${product.name}" 
+                                             class="product-thumbnail"
+                                             onerror="handleAdminImageError(this, '${product.name}')">
+                                        <strong>${product.name}</strong>
+                                    </div>
                                 </td>
                                 <td>${product.category}</td>
                                 <td>
@@ -742,7 +916,7 @@ function loadInventoryView() {
                                     </button>
                                 </td>
                             </tr>
-                        `).join('')}
+                        `}).join('')}
                     </tbody>
                 </table>
             </div>
@@ -909,52 +1083,150 @@ function updateAdminUI() {
     }
 }
 
-// Initialize admin dashboard when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    initializeAdminDashboard();
-});
-
 // Utility functions for modals
 function closeModal(modalId) {
-    document.getElementById(modalId).classList.remove('show');
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('show');
+        // Remove modal from DOM after animation
+        setTimeout(() => {
+            if (modal && modal.parentNode) {
+                modal.parentNode.removeChild(modal);
+            }
+        }, 300);
+    }
 }
 
 function printOrder(orderId) {
     showToast('Print functionality would be implemented here', 'info');
 }
 
-// Placeholder functions for future implementation
+// Enhanced product management functions
 function showAddProductForm() {
-    showToast('Add product form would open here', 'info');
+    const modal = document.createElement('div');
+    modal.id = 'add-product-modal';
+    modal.className = 'modal';
+    
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Product</h3>
+                <button class="modal-close" onclick="closeModal('add-product-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="add-product-form">
+                    <div class="form-group">
+                        <label class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="new-product-name" placeholder="Enter product name">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Price (₱)</label>
+                            <input type="number" class="form-control" id="new-product-price" placeholder="0.00" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Initial Stock</label>
+                            <input type="number" class="form-control" id="new-product-stock" value="0" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-control" id="new-product-category">
+                            <option value="Breads">Breads</option>
+                            <option value="Cakes">Cakes</option>
+                            <option value="Cupcakes">Cupcakes</option>
+                            <option value="Other Favorites">Other Favorites</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" id="new-product-description" rows="3" placeholder="Enter product description"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Image URL</label>
+                        <input type="text" class="form-control" id="new-product-image" placeholder="assets/images/product.jpg">
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="addNewProduct()">
+                        Add Product
+                    </button>
+                    <button class="btn btn-outline" onclick="closeModal('add-product-modal')">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    modal.classList.add('show');
+}
+
+function addNewProduct() {
+    const name = document.getElementById('new-product-name').value;
+    const price = parseFloat(document.getElementById('new-product-price').value);
+    const stock = parseInt(document.getElementById('new-product-stock').value);
+    const category = document.getElementById('new-product-category').value;
+    const description = document.getElementById('new-product-description').value;
+    const image = document.getElementById('new-product-image').value;
+
+    if (!name || isNaN(price) || isNaN(stock)) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+    }
+
+    const products = JSON.parse(localStorage.getItem('bakerist_products') || '[]');
+    const newProduct = {
+        id: 'prod_' + Date.now(),
+        name: name,
+        price: price,
+        stock: stock,
+        category: category,
+        description: description,
+        image: image || 'assets/images/placeholder.jpg',
+        available: true,
+        options: null
+    };
+
+    products.push(newProduct);
+    localStorage.setItem('bakerist_products', JSON.stringify(products));
+    loadAdminData();
+    loadProductsView();
+    closeModal('add-product-modal');
+    showToast('Product added successfully', 'success');
 }
 
 function showRestockForm(productId) {
-    const amount = prompt('Enter restock amount:');
+    const product = adminState.products.find(p => p.id === productId);
+    if (!product) return;
+
+    const amount = prompt(`Enter restock amount for ${product.name} (Current: ${product.stock}):`, '10');
     if (amount && !isNaN(amount)) {
-        updateStock(productId, parseInt(amount));
+        updateStock(productId, product.stock + parseInt(amount));
     }
 }
 
-function showAddStaffForm() {
-    showToast('Add staff form would open here', 'info');
-}
+// Initialize admin dashboard when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initializeAdminDashboard();
+});
 
-function editStaff(staffId) {
-    showToast('Edit staff form would open here', 'info');
-}
-
-function toggleStaffStatus(staffId) {
-    showToast('Staff status toggle would happen here', 'info');
-}
-
-function markOrderComplete(orderId) {
-    updateOrderStatus(orderId, 'Delivered');
-}
-
-function showBulkRestockForm() {
-    showToast('Bulk restock form would open here', 'info');
-}
-
-function generateInventoryReport() {
-    showToast('Inventory report would be generated here', 'info');
-}
+// Make functions available globally
+window.closeModal = closeModal;
+window.printOrder = printOrder;
+window.showAddProductForm = showAddProductForm;
+window.showRestockForm = showRestockForm;
+window.editProduct = editProduct;
+window.toggleProductAvailability = toggleProductAvailability;
+window.updateStock = updateStock;
+window.viewOrderDetails = viewOrderDetails;
+window.updateOrderStatus = updateOrderStatus;
+window.markOrderComplete = markOrderComplete;
+window.handleAdminImageError = handleAdminImageError;
