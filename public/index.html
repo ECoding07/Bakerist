@@ -589,5 +589,69 @@
         `;
         document.head.appendChild(mobileDropdownStyle);
     </script>
+
+    <!-- Mobile Menu Overlay -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header">
+        <div class="mobile-menu-logo">
+            <img src="assets/images/bakerist-logo.png" alt="BAKERIST" style="height: 30px;">
+            <span style="font-family: var(--font-heading); font-weight: 700; color: var(--accent-dark); margin-left: 8px;">BAKERIST</span>
+        </div>
+        <button class="mobile-menu-close" id="mobileMenuClose">
+            ×
+        </button>
+    </div>
+    
+    <div class="mobile-menu-content">
+        <!-- Navigation Links -->
+        <ul class="mobile-nav-links">
+            <li><a href="index.html" class="mobile-nav-link active">Home</a></li>
+            <li><a href="menu.html" class="mobile-nav-link">Menu</a></li>
+            <li><a href="tracking.html" class="mobile-nav-link">Track Order</a></li>
+            <li class="logged-in hidden"><a href="profile.html" class="mobile-nav-link">My Profile</a></li>
+            <li class="admin-only hidden"><a href="admin.html" class="mobile-nav-link">Admin</a></li>
+        </ul>
+        
+        <!-- User Section (Logged In) -->
+        <div class="mobile-user-section logged-in hidden">
+            <div class="mobile-user-info">
+                <div class="mobile-user-avatar">👤</div>
+                <div class="mobile-user-name">User</div>
+            </div>
+            <div class="mobile-user-dropdown">
+                <a href="profile.html" class="mobile-dropdown-item">
+                    <span class="mobile-dropdown-icon">👤</span>
+                    My Profile
+                </a>
+                <a href="tracking.html" class="mobile-dropdown-item">
+                    <span class="mobile-dropdown-icon">📦</span>
+                    My Orders
+                </a>
+                <div class="dropdown-divider"></div>
+                <button class="mobile-dropdown-item logout-btn" onclick="logout()">
+                    <span class="mobile-dropdown-icon">🚪</span>
+                    Logout
+                </button>
+            </div>
+        </div>
+        
+        <!-- Actions Section -->
+        <div class="mobile-actions">
+            <!-- Cart Button -->
+            <a href="cart.html" class="btn btn-outline" style="justify-content: center;">
+                🛒 Cart <span id="mobile-cart-count">0</span>
+            </a>
+            
+            <!-- Login Button (Logged Out) -->
+            <div class="logged-out">
+                <a href="login.html" class="btn btn-secondary" style="justify-content: center;">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

@@ -9,6 +9,44 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <style>
+    /* Enhanced responsive helper classes */
+    .mobile-only { display: none; }
+    .desktop-only { display: block; }
+    
+    @media (max-width: 768px) {
+        .mobile-only { display: block; }
+        .desktop-only { display: none; }
+    }
+    
+    /* Cart count animation */
+    #cart-count.cart-update {
+        animation: cartBounce 0.5s ease;
+    }
+    
+    @keyframes cartBounce {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.3); }
+    }
+    
+    /* Touch feedback */
+    .touch-active {
+        opacity: 0.7;
+        transform: scale(0.98);
+    }
+    
+    /* Prevent body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;
+    }
+    
+    /* Smooth transitions for all interactive elements */
+    .btn, .nav-link, .dropdown-item, .category-tab {
+        transition: all 0.2s ease;
+    }
+</style>
+
 </head>
 <body data-page="admin">
     <!-- Header -->
@@ -340,5 +378,68 @@
             }
         });
     </script>
+
+    <!-- Mobile Menu Overlay -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header">
+        <div class="mobile-menu-logo">
+            <img src="assets/images/bakerist-logo.png" alt="BAKERIST" style="height: 30px;">
+            <span style="font-family: var(--font-heading); font-weight: 700; color: var(--accent-dark); margin-left: 8px;">BAKERIST</span>
+        </div>
+        <button class="mobile-menu-close" id="mobileMenuClose">
+            ×
+        </button>
+    </div>
+    
+    <div class="mobile-menu-content">
+        <!-- Navigation Links -->
+        <ul class="mobile-nav-links">
+            <li><a href="index.html" class="mobile-nav-link active">Home</a></li>
+            <li><a href="menu.html" class="mobile-nav-link">Menu</a></li>
+            <li><a href="tracking.html" class="mobile-nav-link">Track Order</a></li>
+            <li class="logged-in hidden"><a href="profile.html" class="mobile-nav-link">My Profile</a></li>
+            <li class="admin-only hidden"><a href="admin.html" class="mobile-nav-link">Admin</a></li>
+        </ul>
+        
+        <!-- User Section (Logged In) -->
+        <div class="mobile-user-section logged-in hidden">
+            <div class="mobile-user-info">
+                <div class="mobile-user-avatar">👤</div>
+                <div class="mobile-user-name">User</div>
+            </div>
+            <div class="mobile-user-dropdown">
+                <a href="profile.html" class="mobile-dropdown-item">
+                    <span class="mobile-dropdown-icon">👤</span>
+                    My Profile
+                </a>
+                <a href="tracking.html" class="mobile-dropdown-item">
+                    <span class="mobile-dropdown-icon">📦</span>
+                    My Orders
+                </a>
+                <button class="mobile-dropdown-item logout-btn" onclick="logout()">
+                    <span class="mobile-dropdown-icon">🚪</span>
+                    Logout
+                </button>
+            </div>
+        </div>
+        
+        <!-- Actions Section -->
+        <div class="mobile-actions">
+            <!-- Cart Button -->
+            <a href="cart.html" class="btn btn-outline" style="justify-content: center;">
+                🛒 Cart <span id="mobile-cart-count">0</span>
+            </a>
+            
+            <!-- Login Button (Logged Out) -->
+            <div class="logged-out">
+                <a href="login.html" class="btn btn-secondary" style="justify-content: center;">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

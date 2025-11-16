@@ -243,10 +243,6 @@ function displayProducts() {
                     ` : `
                         <button class="btn btn-outline" disabled>Out of Stock</button>
                     `}
-                    
-                    <button class="btn btn-outline view-details-btn" onclick="viewProductDetails('${product.id}')">
-                        View Details
-                    </button>
                 </div>
             </div>
         </div>
